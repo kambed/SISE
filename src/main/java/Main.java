@@ -18,7 +18,7 @@ public class Main {
                 {13,14,15,0}
         };
         FifteenPuzzle fp = new FifteenPuzzle(start);
-        //new depthFirstSolve(fp);
+        //new DepthFirstSolve(fp);
         new BreadthFirstSolve(fp);
         System.out.println("Finished");
     }
