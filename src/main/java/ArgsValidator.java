@@ -12,15 +12,19 @@ public class ArgsValidator {
             if (!heuristic.contains(args[1])) return "Invalid heuristic for astr (manh,hamm)";
         }
         if (args[0].equals("bfs") || args[0].equals("dfs")) {
-            List<String> order = Arrays.asList("LRUD","RLUD","ULRD","LURD","RULD","URLD",
-                    "URDL","RUDL","DURL","UDRL","RDUL","DRUL",
-                    "DLUR","LDUR","UDLR","DULR","LUDR","ULDR",
-                    "RLDU","LRDU","DRLU","RDLU","LDRU","DLRU");
-            if (!order.contains(args[1])) return "Invalid order (permutation of LRUD)";
+            if(
+                    !(args[1].length() == 4
+                            && args[1].contains("L")
+                            && args[1].contains("R")
+                            && args[1].contains("U")
+                            && args[1].contains("D"))
+            ) {
+                return "Invalid order (permutation of LRUD)";
+            }
         }
-        if (!args[3].endsWith(".txt")) return "Third argument is not txt file";
-        if (!args[4].endsWith(".txt")) return "Forth argument is not txt file";
-        if (!args[5].endsWith(".txt")) return "Fifth argument is not txt file";
+        if (!args[2].endsWith(".txt")) return "Third argument is not txt file";
+        if (!args[3].endsWith(".txt")) return "Forth argument is not txt file";
+        if (!args[4].endsWith(".txt")) return "Fifth argument is not txt file";
         return result;
     }
 }
