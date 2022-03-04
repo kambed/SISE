@@ -1,5 +1,9 @@
 public class Main {
     public static void main(String[] args){
-        System.out.print("Hello SISE");
+        String val = ArgsValidator.validate(args);
+        if (val != null) {
+            System.out.println(val);
+            return;
+        }
     }
 }
