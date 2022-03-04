@@ -2,8 +2,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class BreadthFirstSolve {
-    FifteenPuzzle currentBoard;
-    Queue<FifteenPuzzle> boardsToCheck = new LinkedList<>();
+    private FifteenPuzzle currentBoard;
+    private Queue<FifteenPuzzle> boardsToCheck = new LinkedList<>();
+    private final int iterations = 20;
 
     public BreadthFirstSolve(FifteenPuzzle currentBoard) {
         this.currentBoard = currentBoard;
@@ -20,7 +21,7 @@ public class BreadthFirstSolve {
         }
         //move left
         if (!currentBoard.getLastMove().equals("R") && currentBoard.getEmptyY() != 0
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveL = currentBoard.clone();
             moveL.moveEmptyL();
             boardsToCheck.add(moveL);
@@ -28,7 +29,7 @@ public class BreadthFirstSolve {
 
         //move right
         if (!currentBoard.getLastMove().equals("L") && currentBoard.getEmptyY() != 3
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveR = currentBoard.clone();
             moveR.moveEmptyR();
             boardsToCheck.add(moveR);
@@ -36,7 +37,7 @@ public class BreadthFirstSolve {
 
         //move up
         if (!currentBoard.getLastMove().equals("D") && currentBoard.getEmptyX() != 0
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveU = currentBoard.clone();
             moveU.moveEmptyU();
             boardsToCheck.add(moveU);
@@ -44,7 +45,7 @@ public class BreadthFirstSolve {
 
         //move down
         if (!currentBoard.getLastMove().equals("U") && currentBoard.getEmptyX() != 3
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveD = currentBoard.clone();
             moveD.moveEmptyD();
             boardsToCheck.add(moveD);

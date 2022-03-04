@@ -2,8 +2,9 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 public class DepthFirstSolve {
-    FifteenPuzzle currentBoard;
-    Stack<FifteenPuzzle> boardsToCheck = new Stack<>();
+    private FifteenPuzzle currentBoard;
+    private Stack<FifteenPuzzle> boardsToCheck = new Stack<>();
+    private final int iterations = 20;
 
     public DepthFirstSolve(FifteenPuzzle currentBoard) {
         this.currentBoard = currentBoard;
@@ -21,7 +22,7 @@ public class DepthFirstSolve {
         }
         //move left
         if (!currentBoard.getLastMove().equals("R") && currentBoard.getEmptyY() != 0
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveL = currentBoard.clone();
             moveL.moveEmptyL();
             boardsToCheck.push(moveL);
@@ -29,7 +30,7 @@ public class DepthFirstSolve {
 
         //move right
         if (!currentBoard.getLastMove().equals("L") && currentBoard.getEmptyY() != 3
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveR = currentBoard.clone();
             moveR.moveEmptyR();
             boardsToCheck.push(moveR);
@@ -37,7 +38,7 @@ public class DepthFirstSolve {
 
         //move up
         if (!currentBoard.getLastMove().equals("D") && currentBoard.getEmptyX() != 0
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveU = currentBoard.clone();
             moveU.moveEmptyU();
             boardsToCheck.push(moveU);
@@ -45,7 +46,7 @@ public class DepthFirstSolve {
 
         //move down
         if (!currentBoard.getLastMove().equals("U") && currentBoard.getEmptyX() != 3
-                && currentBoard.getIterations() < 20) {
+                && currentBoard.getIterations() < iterations) {
             FifteenPuzzle moveD = currentBoard.clone();
             moveD.moveEmptyD();
             boardsToCheck.push(moveD);
