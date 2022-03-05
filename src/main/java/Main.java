@@ -18,8 +18,10 @@ public class Main {
                 {13,14,15,0}
         };
         FifteenPuzzle fp = new FifteenPuzzle(start);
-        //new DepthFirstSolve(fp);
-        new BreadthFirstSolve(fp);
+        switch (args[0]) {
+            case "bfs" -> new BreadthFirstSolve(fp, args[1]);
+            case "dfs" -> new DepthFirstSolve(fp, args[1]);
+        }
         System.out.println("Finished");
     }
 }
