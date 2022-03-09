@@ -1,3 +1,4 @@
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -5,9 +6,10 @@ public class BreadthFirstSolve {
     private FifteenPuzzle currentBoard;
     private Queue<FifteenPuzzle> boardsToCheck = new LinkedList<>();
     private char chars[] = new char[4];
-    private Stats stats = new Stats();
+    private Stats stats;
 
-    public BreadthFirstSolve(FifteenPuzzle currentBoard, String order) {
+    public BreadthFirstSolve(FifteenPuzzle currentBoard, String order, Path solutionPath, Path statsPath) {
+        stats = new Stats(solutionPath, statsPath);
         stats.incrementProcessed();
         this.currentBoard = currentBoard;
         try {
@@ -70,5 +72,9 @@ public class BreadthFirstSolve {
                 }
                 break;
         }
+    }
+
+    public Stats getStats() {
+        return stats;
     }
 }

@@ -1,3 +1,4 @@
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -5,10 +6,11 @@ public class DepthFirstSolve {
     private FifteenPuzzle currentBoard;
     private Stack<FifteenPuzzle> boardsToCheck = new Stack<>();
     private char chars[] = new char[4];
-    private Stats stats = new Stats();
+    private Stats stats;
     private final int ITERATIONS = 20;
 
-    public DepthFirstSolve(FifteenPuzzle currentBoard, String order) {
+    public DepthFirstSolve(FifteenPuzzle currentBoard, String order, Path solutionPath, Path statsPath) {
+        stats = new Stats(solutionPath, statsPath);
         this.currentBoard = currentBoard;
         try {
             for (int i = 0; i < 4; i++) {
