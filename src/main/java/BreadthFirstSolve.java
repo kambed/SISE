@@ -4,40 +4,30 @@ import java.util.Queue;
 public class BreadthFirstSolve {
     private FifteenPuzzle currentBoard;
     private Queue<FifteenPuzzle> boardsToCheck = new LinkedList<>();
-    private int boardsVisited = 0;
-    private int boardsProcessed = 0;
-    private int maxRecursionLevel = 0;
-    private long start = System.currentTimeMillis();
+    private char chars[] = new char[4];
+    private Stats stats = new Stats();
 
     public BreadthFirstSolve(FifteenPuzzle currentBoard, String order) {
+        stats.incrementProcessed();
         this.currentBoard = currentBoard;
         try {
-            this.solve(order);
+            for (int i = 0; i < 4; i++) {
+                chars[i] = order.charAt(i);
+            }
+            this.solve();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
     }
 
-    private void solve(String order) throws CloneNotSupportedException {
-        boardsVisited++;
-        if (maxRecursionLevel < this.currentBoard.getIterations()) {
-            maxRecursionLevel = this.currentBoard.getIterations();
-        }
-        if (currentBoard.check()) {
-            System.out.println("Solution length: " + currentBoard.getIterations());
-            System.out.println("States visited: " + this.boardsVisited);
-            System.out.println("States processed: " + this.boardsProcessed);
-            System.out.println("Max recursion level: " + this.maxRecursionLevel);
-            System.out.println("Time: " + (System.currentTimeMillis() - this.start) + "ms");
-            System.out.println("SOLUTION: " + currentBoard.getHistoryOfMoves().toString());
-            return;
-        }
+    private void solve() throws CloneNotSupportedException {
+        if (stats.checkAndDisplayStats(this.currentBoard)) return;
         for (int i = 0; i < 4; i++) {
-            move(order.charAt(i));
+            move(chars[i]);
         }
         this.currentBoard = boardsToCheck.poll();
         if (this.boardsToCheck.size() != 0) {
-            this.solve(order);
+            this.solve();
         }
     }
 
@@ -49,7 +39,7 @@ public class BreadthFirstSolve {
                     FifteenPuzzle moveL = currentBoard.clone();
                     moveL.moveEmptyL();
                     boardsToCheck.add(moveL);
-                    boardsProcessed++;
+                    stats.incrementProcessed();
                 }
                 break;
             case 'R':
@@ -58,7 +48,7 @@ public class BreadthFirstSolve {
                     FifteenPuzzle moveR = currentBoard.clone();
                     moveR.moveEmptyR();
                     boardsToCheck.add(moveR);
-                    boardsProcessed++;
+                    stats.incrementProcessed();
                 }
                 break;
             case 'U':
@@ -67,7 +57,7 @@ public class BreadthFirstSolve {
                     FifteenPuzzle moveU = currentBoard.clone();
                     moveU.moveEmptyU();
                     boardsToCheck.add(moveU);
-                    boardsProcessed++;
+                    stats.incrementProcessed();
                 }
                 break;
             case 'D':
@@ -76,7 +66,7 @@ public class BreadthFirstSolve {
                     FifteenPuzzle moveD = currentBoard.clone();
                     moveD.moveEmptyD();
                     boardsToCheck.add(moveD);
-                    boardsProcessed++;
+                    stats.incrementProcessed();
                 }
                 break;
         }
