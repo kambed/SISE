@@ -1,5 +1,4 @@
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Stack;
 
 public class DepthFirstSolve {
@@ -23,7 +22,7 @@ public class DepthFirstSolve {
     }
 
     private void solve() throws CloneNotSupportedException {
-        if (stats.checkAndDisplayStats(this.currentBoard)) return;
+        if (stats.checkAndSaveStats(this.currentBoard)) return;
         for (int i = 3; i >= 0; i--) {
             move(chars[i]);
         }

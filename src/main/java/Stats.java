@@ -14,7 +14,7 @@ public class Stats {
         this.statsPath = statsPath;
     }
 
-    public boolean checkAndDisplayStats(FifteenPuzzle currentBoard) {
+    public boolean checkAndSaveStats(FifteenPuzzle currentBoard) {
         boardsVisited++;
         if (maxRecursionLevel < currentBoard.getIterations()) {
             maxRecursionLevel = currentBoard.getIterations();

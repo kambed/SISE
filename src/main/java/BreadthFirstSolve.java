@@ -23,7 +23,7 @@ public class BreadthFirstSolve {
     }
 
     private void solve() throws CloneNotSupportedException {
-        if (stats.checkAndDisplayStats(this.currentBoard)) return;
+        if (stats.checkAndSaveStats(this.currentBoard)) return;
         for (int i = 0; i < 4; i++) {
             move(chars[i]);
         }
@@ -72,9 +72,5 @@ public class BreadthFirstSolve {
                 }
                 break;
         }
-    }
-
-    public Stats getStats() {
-        return stats;
     }
 }
