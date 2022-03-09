@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -10,6 +11,7 @@ public class Main {
             return;
         }
         Path startPuzzle = Paths.get("../../../files/" + args[2]);
+        int[][] fileImport = FileReaderClass.readBoard(startPuzzle);
         int[][] start = {
                 {5, 3, 7, 1},
                 {15, 13, 9, 11},
@@ -34,7 +36,7 @@ public class Main {
                 {15, 12, 7, 4},
                 {14, 13, 8, 3}
         };
-        FifteenPuzzle fp = new FifteenPuzzle(solved2);
+        FifteenPuzzle fp = new FifteenPuzzle(fileImport);
         switch (args[0]) {
             case "bfs" -> new BreadthFirstSolve(fp, args[1]);
             case "dfs" -> new DepthFirstSolve(fp, args[1]);
