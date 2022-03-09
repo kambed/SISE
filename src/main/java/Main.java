@@ -15,13 +15,12 @@ public class Main {
                 {1,2,3,4},
                 {5,6,7,8},
                 {9,10,11,12},
-                {13,14,15,0}
+                {0,13,14,15}
         };
-        FifteenPuzzle fp = new FifteenPuzzle(start);
+        FifteenPuzzle fp = new FifteenPuzzle(solved);
         switch (args[0]) {
             case "bfs" -> new BreadthFirstSolve(fp, args[1]);
             case "dfs" -> new DepthFirstSolve(fp, args[1]);
         }
-        System.out.println("Finished");
     }
 }

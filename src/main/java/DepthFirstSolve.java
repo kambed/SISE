@@ -4,6 +4,10 @@ public class DepthFirstSolve {
     private FifteenPuzzle currentBoard;
     private Stack<FifteenPuzzle> boardsToCheck = new Stack<>();
     private final int ITERATIONS = 20;
+    private int boardsVisited = 0;
+    private int boardsProcessed = 0;
+    private int maxRecursionLevel = 0;
+    private long start = System.currentTimeMillis();
 
     public DepthFirstSolve(FifteenPuzzle currentBoard, String order) {
         this.currentBoard = currentBoard;
@@ -15,10 +19,21 @@ public class DepthFirstSolve {
     }
 
     private void solve(String order) throws CloneNotSupportedException {
+        boardsVisited++;
+        if (maxRecursionLevel < this.currentBoard.getIterations()) {
+            maxRecursionLevel = this.currentBoard.getIterations();
+        }
         if (currentBoard.check()) {
+            System.out.println("Solution length: " + currentBoard.getIterations());
+            System.out.println("States visited: " + this.boardsVisited);
+            System.out.println("States processed: " + this.boardsProcessed);
+            System.out.println("Max recursion level: " + this.maxRecursionLevel);
+            System.out.println("Time: " + (System.currentTimeMillis() - this.start) + "ms");
+            System.out.println("SOLUTION: " + currentBoard.getHistoryOfMoves().toString());
             return;
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 3; i >= 0; i--) {
+            System.out.println(order.charAt(i));
             move(order.charAt(i));
         }
         this.currentBoard = boardsToCheck.pop();
@@ -36,6 +51,7 @@ public class DepthFirstSolve {
                     FifteenPuzzle moveL = currentBoard.clone();
                     moveL.moveEmptyL();
                     boardsToCheck.push(moveL);
+                    boardsProcessed++;
                 }
                 break;
             case 'R':
@@ -45,6 +61,7 @@ public class DepthFirstSolve {
                     FifteenPuzzle moveR = currentBoard.clone();
                     moveR.moveEmptyR();
                     boardsToCheck.push(moveR);
+                    boardsProcessed++;
                 }
                 break;
             case 'U':
@@ -54,6 +71,7 @@ public class DepthFirstSolve {
                     FifteenPuzzle moveU = currentBoard.clone();
                     moveU.moveEmptyU();
                     boardsToCheck.push(moveU);
+                    boardsProcessed++;
                 }
                 break;
             case 'D':
@@ -63,6 +81,7 @@ public class DepthFirstSolve {
                     FifteenPuzzle moveD = currentBoard.clone();
                     moveD.moveEmptyD();
                     boardsToCheck.push(moveD);
+                    boardsProcessed++;
                 }
                 break;
         }
