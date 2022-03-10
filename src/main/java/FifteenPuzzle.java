@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class FifteenPuzzle implements Cloneable {
     private int[][] board;
@@ -6,6 +8,7 @@ public class FifteenPuzzle implements Cloneable {
     private int emptyY;
     private String lastMove;
     private int iterations = 0;
+    private List<String> historyOfMoves = new ArrayList<>();
 
     public FifteenPuzzle(int[][] board) {
         this.lastMove = "FIRST";
@@ -22,6 +25,14 @@ public class FifteenPuzzle implements Cloneable {
 
     public void setBoard(int[][] board) {
         this.board = board;
+    }
+
+    public void setHistoryOfMoves(List<String> historyOfMoves) {
+        this.historyOfMoves = historyOfMoves;
+    }
+
+    public List<String> getHistoryOfMoves() {
+        return historyOfMoves;
     }
 
     public int getEmptyX() {
@@ -46,6 +57,7 @@ public class FifteenPuzzle implements Cloneable {
         this.emptyY = emptyY + 1;
         iterations++;
         this.lastMove = "R";
+        this.historyOfMoves.add("R");
     }
 
     public void moveEmptyL() {
@@ -54,6 +66,7 @@ public class FifteenPuzzle implements Cloneable {
         this.emptyY = emptyY - 1;
         iterations++;
         this.lastMove = "L";
+        this.historyOfMoves.add("L");
     }
 
     public void moveEmptyU() {
@@ -62,6 +75,7 @@ public class FifteenPuzzle implements Cloneable {
         this.emptyX = emptyX - 1;
         iterations++;
         this.lastMove = "U";
+        this.historyOfMoves.add("U");
     }
 
     public void moveEmptyD() {
@@ -70,6 +84,7 @@ public class FifteenPuzzle implements Cloneable {
         this.emptyX = emptyX + 1;
         iterations++;
         this.lastMove = "D";
+        this.historyOfMoves.add("D");
     }
 
     public boolean check() {
@@ -92,6 +107,8 @@ public class FifteenPuzzle implements Cloneable {
                 board[i][j] = this.board[i][j];
             }
         }
+        List<String> moves = new ArrayList<>(getHistoryOfMoves());
+        clone.setHistoryOfMoves(moves);
         clone.setBoard(board);
         return clone;
     }

@@ -3,7 +3,6 @@ import java.util.List;
 
 public class ArgsValidator {
     public static String validate(String[] args) {
-        String result = null;
         if (args.length != 5) return "Invalid number of arguments";
         List<String> strategy = Arrays.asList("bfs","dfs","astr");
         if (!strategy.contains(args[0])) return "Invalid strategy parameter (bfs,dfs,astr)";
@@ -25,6 +24,6 @@ public class ArgsValidator {
         if (!args[2].endsWith(".txt")) return "Third argument is not txt file";
         if (!args[3].endsWith(".txt")) return "Forth argument is not txt file";
         if (!args[4].endsWith(".txt")) return "Fifth argument is not txt file";
-        return result;
+        return null;
     }
 }
