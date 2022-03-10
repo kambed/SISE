@@ -10,7 +10,7 @@ public class Main {
             return;
         }
         Path startPuzzle = Paths.get("../../../files/" + args[2]);
-        int[][] fileImport = FileOperator.readBoard(startPuzzle);
+        byte[][] fileImport = FileOperator.readBoard(startPuzzle);
         int[][] start = {
                 {5, 3, 7, 1},
                 {15, 13, 9, 11},
@@ -23,7 +23,7 @@ public class Main {
                 {13, 10, 7, 12},
                 {14, 9, 11, 15}
         };
-        int[][] solved2 = {
+        byte[][] solved2 = {
                 {1, 2, 3, 4},
                 {5, 6, 7, 8},
                 {9, 10, 11, 12},
@@ -41,6 +41,7 @@ public class Main {
         switch (args[0]) {
             case "bfs" -> new BreadthFirstSolve(fp, args[1], solutionPath, stats);
             case "dfs" -> new DepthFirstSolve(fp, args[1], solutionPath, stats);
+            case "astr" -> new Astar(fp, args[1], solutionPath, stats);
         }
     }
 }
