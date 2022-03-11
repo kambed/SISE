@@ -7,7 +7,8 @@ public class FifteenPuzzle implements Cloneable {
     private byte emptyX;
     private byte emptyY;
     private String lastMove;
-    private byte iterations = 0;
+    private int iterations = 0;
+    private int manhPlusIter = 0;
     private List<String> historyOfMoves = new ArrayList<>();
 
     public FifteenPuzzle() {
@@ -24,6 +25,14 @@ public class FifteenPuzzle implements Cloneable {
                 }
             }
         }
+    }
+
+    public int getManhPlusIter() {
+        return manhPlusIter;
+    }
+
+    public void setManhPlusIter(int manhPlusIter) {
+        this.manhPlusIter = manhPlusIter;
     }
 
     public void setBoard(byte[][] board) {
@@ -50,7 +59,7 @@ public class FifteenPuzzle implements Cloneable {
         return lastMove;
     }
 
-    public byte getIterations() {
+    public int getIterations() {
         return iterations;
     }
 

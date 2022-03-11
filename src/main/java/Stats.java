@@ -23,7 +23,7 @@ public class Stats {
             double endTime = Math.round((System.nanoTime() - start)/1000.0)/1000.0;
             try {
                 FileOperator.saveSolution(solutionPath, currentBoard.getHistoryOfMoves().toString(), currentBoard.getIterations());
-                FileOperator.saveStats(statsPath,currentBoard.getIterations(),boardsVisited,boardsProcessed,maxRecursionLevel,endTime);
+                FileOperator.saveStats(statsPath,currentBoard.getHistoryOfMoves().size(),boardsVisited,boardsProcessed,maxRecursionLevel,endTime);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -34,6 +34,10 @@ public class Stats {
 
     public int getBoardsProcessed() {
         return boardsProcessed;
+    }
+
+    public int getBoardsVisited() {
+        return boardsVisited;
     }
 
     public void incrementProcessed() {
