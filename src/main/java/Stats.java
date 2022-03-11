@@ -32,6 +32,10 @@ public class Stats {
         return false;
     }
 
+    public int getBoardsProcessed() {
+        return boardsProcessed;
+    }
+
     public void incrementProcessed() {
         boardsProcessed++;
     }
