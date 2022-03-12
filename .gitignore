@@ -4,3 +4,6 @@
 *.class
 **/*.class
 /files/
+/src/main/python/.idea/
+/src/main/python/venv/
+/src/main/python/*.txt
