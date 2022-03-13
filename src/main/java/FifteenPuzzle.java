@@ -10,15 +10,19 @@ public class FifteenPuzzle implements Cloneable {
     private int iterations = 0;
     private int manhPlusIter = 0;
     private List<String> historyOfMoves = new ArrayList<>();
+    private int rows = 0;
+    private int columns = 0;
 
     public FifteenPuzzle() {
     }
 
-    public FifteenPuzzle(byte[][] board) {
+    public FifteenPuzzle(byte[][] board, int rows, int columns) {
         this.lastMove = "X";
         this.board = board;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        this.rows = rows;
+        this.columns = columns;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 if (board[i][j] == 0) {
                     this.emptyX = (byte) i;
                     this.emptyY = (byte) j;
@@ -100,12 +104,12 @@ public class FifteenPuzzle implements Cloneable {
     }
 
     public boolean check() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (i == 3 && j == 3) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (i == rows - 1 && j == columns - 1) {
                     return true;
                 }
-                if (board[i][j] != j + i * 4 + 1) return false;
+                if (board[i][j] != j + i * columns + 1) return false;
             }
         }
         return true;
@@ -113,13 +117,13 @@ public class FifteenPuzzle implements Cloneable {
 
     public int hamming() {
         int hamming = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (i == 3 && j == 3) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (i == rows - 1 && j == columns - 1) {
                     if (board[i][j] != 0) hamming++;
                     return hamming;
                 }
-                if (board[i][j] != j + i * 4 + 1) {
+                if (board[i][j] != j + i * columns + 1) {
                     hamming++;
                 }
             }
@@ -131,14 +135,14 @@ public class FifteenPuzzle implements Cloneable {
         int manhattan = 0;
         int desiredX;
         int desiredY;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 if (board[i][j] == 0) {
-                    desiredX = 3;
-                    desiredY = 3;
+                    desiredX = rows - 1;
+                    desiredY = columns - 1;
                 } else {
-                    desiredX = (board[i][j] - 1) / 4;
-                    desiredY = (board[i][j] - 1) % 4;
+                    desiredX = (board[i][j] - 1) / columns;
+                    desiredY = (board[i][j] - 1) % columns;
                 }
                 manhattan = manhattan + Math.abs(i - desiredX) + Math.abs(j - desiredY);
             }
@@ -148,9 +152,9 @@ public class FifteenPuzzle implements Cloneable {
 
     public FifteenPuzzle clone() throws CloneNotSupportedException {
         FifteenPuzzle clone = (FifteenPuzzle) super.clone();
-        byte[][] board = new byte[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        byte[][] board = new byte[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 board[i][j] = this.board[i][j];
             }
         }
@@ -163,8 +167,8 @@ public class FifteenPuzzle implements Cloneable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 if (board[i][j] > 9) {
                     sb.append("[" + board[i][j] + "]");
                 }

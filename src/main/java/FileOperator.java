@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileOperator {
+    private static int rows;
+    private static int columns;
+
     public static byte[][] readBoard(Path p) throws IOException {
         if (Files.exists(p)) {
             List<String> lines = Files.readAllLines(p);
@@ -15,6 +18,8 @@ public class FileOperator {
             for (String arg : lines.remove(0).split("\\s+")) {
                 args.add(Integer.parseInt(arg));
             }
+            rows = args.get(0);
+            columns = args.get(1);
             byte[][] board = new byte[args.get(0)][args.get(1)];
             int i = 0;
             int j = 0;
@@ -41,5 +46,13 @@ public class FileOperator {
         List<String> lines = Arrays.asList(Integer.toString(solutionLength), Integer.toString(visited),
                 Integer.toString(processed), Integer.toString(maxRecursionLever), Double.toString(time));
         Files.write(p, lines, StandardCharsets.UTF_8);
+    }
+
+    public static int getRows() {
+        return rows;
+    }
+
+    public static int getColumns() {
+        return columns;
     }
 }

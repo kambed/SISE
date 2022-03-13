@@ -7,10 +7,15 @@ public class DepthFirstSolve {
     private char chars[] = new char[4];
     private Stats stats;
     private final int ITERATIONS = 20;
+    private int rows = 0;
+    private int columns = 0;
 
-    public DepthFirstSolve(FifteenPuzzle currentBoard, String order, Path solutionPath, Path statsPath) {
+    public DepthFirstSolve(FifteenPuzzle currentBoard, String order, int rows, int columns,
+                           Path solutionPath, Path statsPath) {
         stats = new Stats(solutionPath, statsPath);
         this.currentBoard = currentBoard;
+        this.rows = rows;
+        this.columns = columns;
         try {
             for (int i = 0; i < 4; i++) {
                 chars[i] = order.charAt(i);
@@ -46,7 +51,7 @@ public class DepthFirstSolve {
                 break;
             case 'R':
                 //move right
-                if (!currentBoard.getLastMove().equals("L") && currentBoard.getEmptyY() != 3
+                if (!currentBoard.getLastMove().equals("L") && currentBoard.getEmptyY() != columns - 1
                         && currentBoard.getIterations() < ITERATIONS) {
                     FifteenPuzzle moveR = currentBoard.clone();
                     moveR.moveEmptyR();
@@ -66,7 +71,7 @@ public class DepthFirstSolve {
                 break;
             case 'D':
                 //move down
-                if (!currentBoard.getLastMove().equals("U") && currentBoard.getEmptyX() != 3
+                if (!currentBoard.getLastMove().equals("U") && currentBoard.getEmptyX() != rows - 1
                         && currentBoard.getIterations() < ITERATIONS) {
                     FifteenPuzzle moveD = currentBoard.clone();
                     moveD.moveEmptyD();

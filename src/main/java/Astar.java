@@ -10,11 +10,16 @@ public class Astar {
     private Stats stats;
     private String heuristic;
     private FifteenPuzzleComparator fpc = new FifteenPuzzleComparator();
+    private int rows = 0;
+    private int columns = 0;
 
-    public Astar(FifteenPuzzle currentBoard, String heuristic, Path solutionPath, Path statsPath) {
+    public Astar(FifteenPuzzle currentBoard, String heuristic, int rows, int columns,
+                 Path solutionPath, Path statsPath) {
         stats = new Stats(solutionPath, statsPath);
         this.currentBoard = currentBoard;
         this.heuristic = heuristic;
+        this.rows = rows;
+        this.columns = columns;
         switch (heuristic) {
             case "hamm" -> solveHamm();
             case "manh" -> solveManh();
@@ -36,12 +41,6 @@ public class Astar {
 
     public void solveManh() {
         if (stats.checkAndSaveStats(this.currentBoard)) return;
-
-//        System.out.println(currentBoard);
-//        System.out.println(currentBoard.manhattan() + currentBoard.getIterations()/4);
-//        Scanner s = new Scanner(System.in);
-//        int t = s.nextInt();
-
         try {
             move();
         } catch (CloneNotSupportedException e) {
@@ -58,56 +57,44 @@ public class Astar {
         if (!(currentBoard.getLastMove().equals("R")) && currentBoard.getEmptyY() != 0) {
             FifteenPuzzle moveL = currentBoard.clone();
             moveL.moveEmptyL();
-            //if (!hashCodesProcessed.contains(moveL.hashCode())) {
-                if (heuristic.equals("hamm")) {
-                    addToSortedListHamm(moveL);
-                } else {
-                    addToSortedListManh(moveL);
-                }
-//                hashCodesProcessed.add(moveL.hashCode());
-//            }
+            if (heuristic.equals("hamm")) {
+                addToSortedListHamm(moveL);
+            } else {
+                addToSortedListManh(moveL);
+            }
             stats.incrementProcessed();
         }
         //move right
-        if (!(currentBoard.getLastMove().equals("L")) && currentBoard.getEmptyY() != 3) {
+        if (!(currentBoard.getLastMove().equals("L")) && currentBoard.getEmptyY() != columns - 1) {
             FifteenPuzzle moveR = currentBoard.clone();
             moveR.moveEmptyR();
-            //if (!hashCodesProcessed.contains(moveR.hashCode())) {
-                if (heuristic.equals("hamm")) {
-                    addToSortedListHamm(moveR);
-                } else {
-                    addToSortedListManh(moveR);
-                }
-//                hashCodesProcessed.add(moveR.hashCode());
-//            }
+            if (heuristic.equals("hamm")) {
+                addToSortedListHamm(moveR);
+            } else {
+                addToSortedListManh(moveR);
+            }
             stats.incrementProcessed();
         }
         //move down
-        if (!(currentBoard.getLastMove().equals("U")) && currentBoard.getEmptyX() != 3) {
+        if (!(currentBoard.getLastMove().equals("U")) && currentBoard.getEmptyX() != rows - 1) {
             FifteenPuzzle moveD = currentBoard.clone();
             moveD.moveEmptyD();
-            //if (!hashCodesProcessed.contains(moveD.hashCode())) {
-                if (heuristic.equals("hamm")) {
-                    addToSortedListHamm(moveD);
-                } else {
-                    addToSortedListManh(moveD);
-                }
-//                hashCodesProcessed.add(moveD.hashCode());
-//            }
+            if (heuristic.equals("hamm")) {
+                addToSortedListHamm(moveD);
+            } else {
+                addToSortedListManh(moveD);
+            }
             stats.incrementProcessed();
         }
         //move up
         if (!(currentBoard.getLastMove().equals("D")) && currentBoard.getEmptyX() != 0) {
             FifteenPuzzle moveU = currentBoard.clone();
             moveU.moveEmptyU();
-            //if (!hashCodesProcessed.contains(moveU.hashCode())) {
-                if (heuristic.equals("hamm")) {
-                    addToSortedListHamm(moveU);
-                } else {
-                    addToSortedListManh(moveU);
-                }
-//                hashCodesProcessed.add(moveU.hashCode());
-//            }
+            if (heuristic.equals("hamm")) {
+                addToSortedListHamm(moveU);
+            } else {
+                addToSortedListManh(moveU);
+            }
             stats.incrementProcessed();
         }
 
