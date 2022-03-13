@@ -32,14 +32,14 @@ public class FileOperator {
     }
 
     public static void saveSolution(Path p, String solution, int solutionLength) throws IOException {
-        List<String> lines = Arrays.asList("Solution length: " + solutionLength, solution);
+        List<String> lines = Arrays.asList(Integer.toString(solutionLength), solution);
         Files.write(p, lines, StandardCharsets.UTF_8);
     }
 
     public static void saveStats(Path p, int solutionLength, int visited, int processed, int maxRecursionLever,
                                  double time) throws IOException {
-        List<String> lines = Arrays.asList("Solution length: " + solutionLength, "States visited: " + visited,
-                "States processed: " + processed, "Max recursion level: " + maxRecursionLever, "Time:" + time + "ms");
+        List<String> lines = Arrays.asList(Integer.toString(solutionLength), Integer.toString(visited),
+                Integer.toString(processed), Integer.toString(maxRecursionLever), Double.toString(time));
         Files.write(p, lines, StandardCharsets.UTF_8);
     }
 }

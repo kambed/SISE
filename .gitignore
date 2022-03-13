@@ -4,3 +4,5 @@
 *.class
 **/*.class
 /files/
+*.jar
+MANIFEST.MF

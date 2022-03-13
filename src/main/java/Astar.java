@@ -9,15 +9,12 @@ public class Astar {
     private List<Integer> hashCodesProcessed = new ArrayList<>();
     private Stats stats;
     private String heuristic;
-    private double start;
-    private int maxIteration;
     private FifteenPuzzleComparator fpc = new FifteenPuzzleComparator();
 
     public Astar(FifteenPuzzle currentBoard, String heuristic, Path solutionPath, Path statsPath) {
         stats = new Stats(solutionPath, statsPath);
         this.currentBoard = currentBoard;
         this.heuristic = heuristic;
-        start = currentBoard.manhattan() + 2;
         switch (heuristic) {
             case "hamm" -> solveHamm();
             case "manh" -> solveManh();
@@ -119,10 +116,12 @@ public class Astar {
     private void addToSortedListHamm(FifteenPuzzle add) {
         boolean added = false;
         int size = boardsToCheck.size();
+        add.setManhPlusIter(add.manhattan() + (add.getIterations() / 2));
         for (int i = 0; i < size; i++) {
-            if (add.hamming() + add.getIterations() / 2 < boardsToCheck.get(i).hamming() + boardsToCheck.get(i).getIterations() / 2) {
+            if (add.getManhPlusIter() < boardsToCheck.get(i).getManhPlusIter()) {
                 boardsToCheck.add(i, add);
                 added = true;
+                break;
             }
         }
         if (!added) {
@@ -131,21 +130,18 @@ public class Astar {
     }
 
     private void addToSortedListManh(FifteenPuzzle add) {
-        if (start < add.manhattan()) return;
         boolean added = false;
         int size = boardsToCheck.size();
-        add.setManhPlusIter(add.manhattan() + (add.getIterations() * 2));
+        add.setManhPlusIter(add.manhattan() + (add.getIterations() / 2));
         for (int i = 0; i < size; i++) {
             if (add.getManhPlusIter() <= boardsToCheck.get(i).getManhPlusIter()) {
                 boardsToCheck.add(i, add);
                 added = true;
-                start -= 0.00005;
                 break;
             }
         }
         if (!added) {
             boardsToCheck.add(add);
-            start -= 0.00005;
         }
     }
 }

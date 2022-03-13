@@ -22,7 +22,11 @@ public class Stats {
         if (currentBoard.check()) {
             double endTime = Math.round((System.nanoTime() - start)/1000.0)/1000.0;
             try {
-                FileOperator.saveSolution(solutionPath, currentBoard.getHistoryOfMoves().toString(), currentBoard.getIterations());
+                StringBuilder sb = new StringBuilder();
+                for (String move: currentBoard.getHistoryOfMoves()) {
+                    sb.append(move);
+                }
+                FileOperator.saveSolution(solutionPath, sb.toString(), currentBoard.getIterations());
                 FileOperator.saveStats(statsPath,currentBoard.getHistoryOfMoves().size(),boardsVisited,boardsProcessed,maxRecursionLevel,endTime);
             } catch (IOException e) {
                 e.printStackTrace();
