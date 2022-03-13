@@ -7,10 +7,15 @@ public class BreadthFirstSolve {
     private Queue<FifteenPuzzle> boardsToCheck = new LinkedList<>();
     private char chars[] = new char[4];
     private Stats stats;
+    private int rows = 0;
+    private int columns = 0;
 
-    public BreadthFirstSolve(FifteenPuzzle currentBoard, String order, Path solutionPath, Path statsPath) {
+    public BreadthFirstSolve(FifteenPuzzle currentBoard, String order, int rows, int columns,
+                             Path solutionPath, Path statsPath) {
         stats = new Stats(solutionPath, statsPath);
         stats.incrementProcessed();
+        this.rows = rows;
+        this.columns = columns;
         this.currentBoard = currentBoard;
         try {
             for (int i = 0; i < 4; i++) {
@@ -46,7 +51,7 @@ public class BreadthFirstSolve {
                 break;
             case 'R':
                 //move right
-                if (!currentBoard.getLastMove().equals("L") && currentBoard.getEmptyY() != 3) {
+                if (!currentBoard.getLastMove().equals("L") && currentBoard.getEmptyY() != columns - 1) {
                     FifteenPuzzle moveR = currentBoard.clone();
                     moveR.moveEmptyR();
                     boardsToCheck.add(moveR);
@@ -64,7 +69,7 @@ public class BreadthFirstSolve {
                 break;
             case 'D':
                 //move down
-                if (!currentBoard.getLastMove().equals("U") && currentBoard.getEmptyX() != 3) {
+                if (!currentBoard.getLastMove().equals("U") && currentBoard.getEmptyX() != rows - 1) {
                     FifteenPuzzle moveD = currentBoard.clone();
                     moveD.moveEmptyD();
                     boardsToCheck.add(moveD);
