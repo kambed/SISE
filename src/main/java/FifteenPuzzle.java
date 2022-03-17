@@ -119,14 +119,13 @@ public class FifteenPuzzle implements Cloneable {
         int hamming = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                if (i == rows - 1 && j == columns - 1) {
-                    if (board[i][j] != 0) hamming++;
-                    return hamming;
-                }
                 if (board[i][j] != j + i * columns + 1) {
                     hamming++;
                 }
             }
+        }
+        if (board[rows - 1][columns - 1] == 0) {
+            hamming--;
         }
         return hamming;
     }
