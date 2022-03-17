@@ -27,14 +27,13 @@ public class DepthFirstSolve {
     }
 
     private void solve() throws CloneNotSupportedException {
-        if (stats.checkAndSaveStats(this.currentBoard)) return;
-        for (int i = 3; i >= 0; i--) {
-            move(chars[i]);
-        }
-        this.currentBoard = boardsToCheck.pop();
-        if (!this.boardsToCheck.empty()) {
-            this.solve();
-        }
+        do {
+            if (stats.checkAndSaveStats(this.currentBoard)) return;
+            for (int i = 3; i >= 0; i--) {
+                move(chars[i]);
+            }
+            this.currentBoard = boardsToCheck.pop();
+        } while (this.boardsToCheck.size() != 0);
     }
 
     private void move(char c) throws CloneNotSupportedException {

@@ -36,6 +36,11 @@ public class Stats {
         return false;
     }
 
+    public void initStats() throws IOException {
+        FileOperator.saveSolution(solutionPath, "", -1);
+        FileOperator.saveStats(statsPath,-1,0,0,0,0);
+    }
+
     public int getBoardsProcessed() {
         return boardsProcessed;
     }
