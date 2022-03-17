@@ -28,14 +28,13 @@ public class BreadthFirstSolve {
     }
 
     private void solve() throws CloneNotSupportedException {
-        if (stats.checkAndSaveStats(this.currentBoard)) return;
-        for (int i = 0; i < 4; i++) {
-            move(chars[i]);
-        }
-        this.currentBoard = boardsToCheck.poll();
-        if (this.boardsToCheck.size() != 0) {
-            this.solve();
-        }
+        do {
+            if (stats.checkAndSaveStats(this.currentBoard)) return;
+            for (int i = 0; i < 4; i++) {
+                move(chars[i]);
+            }
+            this.currentBoard = boardsToCheck.poll();
+        } while (this.boardsToCheck.size() != 0);
     }
 
     private void move(char c) throws CloneNotSupportedException {

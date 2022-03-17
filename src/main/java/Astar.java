@@ -27,29 +27,27 @@ public class Astar {
     }
 
     public void solveHamm() {
-        if (stats.checkAndSaveStats(this.currentBoard)) return;
-        try {
-            move();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        this.currentBoard = boardsToCheck.remove(0);
-        if (this.boardsToCheck.size() != 0) {
-            this.solveHamm();
-        }
+        do {
+            if (stats.checkAndSaveStats(this.currentBoard)) return;
+            try {
+                move();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            this.currentBoard = boardsToCheck.remove(0);
+        } while (this.boardsToCheck.size() != 0);
     }
 
     public void solveManh() {
-        if (stats.checkAndSaveStats(this.currentBoard)) return;
-        try {
-            move();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        this.currentBoard = boardsToCheck.remove(0);
-        if (this.boardsToCheck.size() != 0) {
-            this.solveManh();
-        }
+        do {
+            if (stats.checkAndSaveStats(this.currentBoard)) return;
+            try {
+                move();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            this.currentBoard = boardsToCheck.remove(0);
+        } while (this.boardsToCheck.size() != 0);
     }
 
     private void move() throws CloneNotSupportedException {
@@ -103,7 +101,7 @@ public class Astar {
     private void addToSortedListHamm(FifteenPuzzle add) {
         boolean added = false;
         int size = boardsToCheck.size();
-        add.setManhPlusIter(add.manhattan() + (add.getIterations() / 2));
+        add.setManhPlusIter(add.hamming() + (add.getIterations() / 2));
         for (int i = 0; i < size; i++) {
             if (add.getManhPlusIter() < boardsToCheck.get(i).getManhPlusIter()) {
                 boardsToCheck.add(i, add);

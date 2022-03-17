@@ -9,13 +9,13 @@ public class Main {
             System.out.println(val);
             return;
         }
-        Path startPuzzle = Paths.get("../../../files/" + args[2]);
+        Path startPuzzle = Paths.get(args[2]);
         byte[][] fileImport = FileOperator.readBoard(startPuzzle);
         int rows = FileOperator.getRows();
         int columns = FileOperator.getColumns();
         FifteenPuzzle fp = new FifteenPuzzle(fileImport, rows, columns);
-        Path solutionPath = Paths.get("../../../files/" + args[3]);
-        Path stats = Paths.get("../../../files/" + args[4]);
+        Path solutionPath = Paths.get(args[3]);
+        Path stats = Paths.get(args[4]);
         switch (args[0]) {
             case "bfs" -> new BreadthFirstSolve(fp, args[1], rows, columns, solutionPath, stats);
             case "dfs" -> new DepthFirstSolve(fp, args[1], rows, columns, solutionPath, stats);
