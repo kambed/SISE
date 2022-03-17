@@ -20,25 +20,10 @@ public class Astar {
         this.heuristic = heuristic;
         this.rows = rows;
         this.columns = columns;
-        switch (heuristic) {
-            case "hamm" -> solveHamm();
-            case "manh" -> solveManh();
-        }
+        solve();
     }
 
-    public void solveHamm() {
-        do {
-            if (stats.checkAndSaveStats(this.currentBoard)) return;
-            try {
-                move();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-            this.currentBoard = boardsToCheck.remove(0);
-        } while (this.boardsToCheck.size() != 0);
-    }
-
-    public void solveManh() {
+    public void solve() {
         do {
             if (stats.checkAndSaveStats(this.currentBoard)) return;
             try {

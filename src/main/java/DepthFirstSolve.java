@@ -33,7 +33,7 @@ public class DepthFirstSolve {
                 move(chars[i]);
             }
             this.currentBoard = boardsToCheck.pop();
-        } while (!this.boardsToCheck.empty());
+        } while (this.boardsToCheck.size() != 0);
     }
 
     private void move(char c) throws CloneNotSupportedException {
