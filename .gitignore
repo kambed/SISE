@@ -7,3 +7,5 @@
 /src/main/python/.idea/
 /src/main/python/venv/
 /src/main/python/*.txt
+*.jar
+MANIFEST.MF
