@@ -37,7 +37,7 @@ def generate():
         plt.figure(figsize=(12.8, 9.6))
 
         plt.subplot(2, 2, 1)
-        plt.subplots_adjust(bottom=0.06, left=0.05, right=0.99, top=0.95)
+        plt.subplots_adjust(bottom=0.06, left=0.1, right=0.99, top=0.9)
         plt.rcParams.update({'font.size': 12})
         # resultsTotal[strategy][move]
         resultsTotal = []
