@@ -1,11 +1,10 @@
 *.iml
-/target/
-/.idea/
+target/
+.idea/
 *.class
 **/*.class
-/files/
-/src/main/python/.idea/
-/src/main/python/venv/
-/src/main/python/*.txt
+files/
+venv/
+*.txt
 *.jar
 MANIFEST.MF
