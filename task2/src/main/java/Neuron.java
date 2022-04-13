@@ -12,7 +12,9 @@ public class Neuron {
         this.weights = new double[numberOfInputs];
         this.activationFunction = activationFunction;
         for (int i = 0; i < weights.length; i++) {
-            weights[i] = (new Random()).nextDouble(-1.0, 1.0);
+            do {
+                weights[i] = (new Random()).nextDouble(-1.0, 1.0);
+            } while (weights[i] == 0);
         }
     }
 
