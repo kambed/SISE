@@ -6,6 +6,7 @@ import java.util.function.Function;
 public class Neuron {
     private final int numberOfInputs;
     private Double[] weights;
+    private double freeExpression;
     private final Function<Double, Double> activationFunction;
     private boolean learningTime = true;
 
@@ -18,6 +19,9 @@ public class Neuron {
                 weights[i] = (new Random()).nextDouble(-1.0, 1.0);
             } while (weights[i] == 0);
         }
+        do {
+            freeExpression = (new Random()).nextDouble(-1.0, 1.0);
+        } while (freeExpression == 0);
     }
 
     public Double[] getWeights() throws IllegalAccessException {
@@ -39,6 +43,17 @@ public class Neuron {
             throw new IllegalAccessException("This neuron is in working time.");
         }
         weights[index] = weight;
+    }
+
+    public double getFreeExpression() {
+        return freeExpression;
+    }
+
+    public void setFreeExpression(double freeExpression) throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("This neuron is in working time.");
+        }
+        this.freeExpression = freeExpression;
     }
 
     public Double getTotalNeuronExcitation(double[] input) {

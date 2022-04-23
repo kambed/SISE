@@ -34,7 +34,6 @@ public class NeuralNetwork {
         for (int i = 0; i < numberOfHiddenLayers; i++) {
             hiddenLayers[i] = new SigmoidalNeuronLayer(layerNumberOfInputs, numberOfNeuronsInHiddenLayer);
             layerNumberOfInputs = numberOfNeuronsInHiddenLayer;
-            numberOfNeuronsInHiddenLayer = (int) Math.ceil(Math.sqrt(layerNumberOfInputs * numberOfOutputs));
         }
 
         outputLayer = new SigmoidalNeuronLayer((int) Math.ceil(Math.sqrt(layerNumberOfInputs * numberOfOutputs)), numberOfOutputs);
