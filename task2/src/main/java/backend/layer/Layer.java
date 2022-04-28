@@ -34,5 +34,13 @@ abstract class Layer {
         return result;
     }
 
+    public Neuron[] getNeurons() {
+        return neurons;
+    }
+
+    public Neuron getNeuron(int i) {
+        return neurons[i];
+    }
+
     public abstract double[] getOutputArray(double[] input);
 }
