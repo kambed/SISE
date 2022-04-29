@@ -68,6 +68,10 @@ public class NeuralNetwork {
         return numberOfHiddenLayers;
     }
 
+    public int getNumberOfNeuronsInHiddenLayer() {
+        return numberOfNeuronsInHiddenLayer;
+    }
+
     public int getNumberOfOutputs() {
         return numberOfOutputs;
     }

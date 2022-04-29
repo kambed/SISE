@@ -7,10 +7,20 @@ import java.util.stream.Stream;
 abstract public class Layer {
     protected int numberOfInputs;
     protected Neuron[] neurons;
+    protected double[] lastWeightChange;
 
     public Layer(int numberOfInputs, int numberOfNeurons) {
         this.numberOfInputs = numberOfInputs;
         neurons = new Neuron[numberOfNeurons];
+        lastWeightChange = new double[numberOfNeurons * numberOfInputs];
+    }
+
+    public double[] getLastWeightChange() {
+        return lastWeightChange;
+    }
+
+    public void setLastWeightChange(int index, double lastWeightChange) {
+        this.lastWeightChange[index] = lastWeightChange;
     }
 
     public void switchToLearningTime() {

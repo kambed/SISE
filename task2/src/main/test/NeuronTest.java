@@ -16,8 +16,8 @@ class NeuronTest {
             assertTrue(weight < 1.0);
             assertTrue(weight > -1.0);
         }
-        assertTrue(neuron.getFreeExpression() < 1.0);
-        assertTrue(neuron.getFreeExpression() > -1.0);
+        assertTrue(neuron.getFreeExpression() <= 1.0);
+        assertTrue(neuron.getFreeExpression() >= -1.0);
     }
 
     @Test
