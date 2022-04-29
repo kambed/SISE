@@ -1,16 +1,17 @@
 package backend;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.function.Function;
 
-public class Neuron {
+public class Neuron implements Serializable {
     private final int numberOfInputs;
     private Double[] weights;
     private double freeExpression;
-    private final Function<Double, Double> activationFunction;
+    private final SerializableFunction activationFunction;
     private boolean learningTime = true;
 
-    public Neuron(int numberOfInputs, Function<Double, Double> activationFunction) {
+    public Neuron(int numberOfInputs, SerializableFunction activationFunction) {
         this.numberOfInputs = numberOfInputs;
         this.weights = new Double[numberOfInputs];
         this.activationFunction = activationFunction;
