@@ -19,9 +19,7 @@ public class Neuron {
                 weights[i] = (new Random()).nextDouble(-1.0, 1.0);
             } while (weights[i] == 0);
         }
-        do {
-            freeExpression = (new Random()).nextDouble(-1.0, 1.0);
-        } while (freeExpression == 0);
+        this.freeExpression = 1;
     }
 
     public Double[] getWeights() throws IllegalAccessException {

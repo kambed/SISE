@@ -11,6 +11,7 @@ public class NeuralNetwork {
     private int numberOfOutputs;
     private int numberOfHiddenLayers = 1;
     private int numberOfNeuronsInHiddenLayer;
+    private double[][] layersResult;
     private boolean learningTime = true;
 
     public NeuralNetwork(int numberOfInputs, int numberOfOutputs, int numberOfNeuronsInHiddenLayer) {
@@ -28,7 +29,10 @@ public class NeuralNetwork {
         this.numberOfHiddenLayers = numberOfHiddenLayers;
         this.numberOfNeuronsInHiddenLayer = numberOfNeuronsInHiddenLayer;
 
+        layersResult = new double[numberOfHiddenLayers + 2][];
+
         inputLayer = new DuplicationNeuronLayer(numberOfInputs);
+        hiddenLayers = new SigmoidalNeuronLayer[numberOfHiddenLayers];
 
         int layerNumberOfInputs = numberOfInputs;
         for (int i = 0; i < numberOfHiddenLayers; i++) {
@@ -36,15 +40,40 @@ public class NeuralNetwork {
             layerNumberOfInputs = numberOfNeuronsInHiddenLayer;
         }
 
-        outputLayer = new SigmoidalNeuronLayer((int) Math.ceil(Math.sqrt(layerNumberOfInputs * numberOfOutputs)), numberOfOutputs);
+        outputLayer = new SigmoidalNeuronLayer(numberOfNeuronsInHiddenLayer, numberOfOutputs);
     }
 
     public double[] calculateOutput(double[] input) {
-        double[] previousLayerResults = inputLayer.getOutputArray(input);
-        for (SigmoidalNeuronLayer hiddenLayer : hiddenLayers) {
-            hiddenLayer.getOutputArray(previousLayerResults);
+        layersResult[0] = inputLayer.getOutputArray(input);
+        for (int i = 1; i <= hiddenLayers.length; i++) {
+            layersResult[i] = hiddenLayers[i - 1].getOutputArray(layersResult[i - 1]);
         }
-        return outputLayer.getOutputArray(previousLayerResults);
+        layersResult[hiddenLayers.length + 1] = outputLayer.getOutputArray(layersResult[hiddenLayers.length]);
+        return layersResult[hiddenLayers.length + 1];
+    }
+
+    public DuplicationNeuronLayer getInputLayer() {
+        return inputLayer;
+    }
+
+    public SigmoidalNeuronLayer[] getHiddenLayers() {
+        return hiddenLayers;
+    }
+
+    public SigmoidalNeuronLayer getOutputLayer() {
+        return outputLayer;
+    }
+
+    public int getNumberOfHiddenLayers() {
+        return numberOfHiddenLayers;
+    }
+
+    public int getNumberOfOutputs() {
+        return numberOfOutputs;
+    }
+
+    public double[][] getLayersResult() {
+        return layersResult;
     }
 
     public boolean isLearningTime() {

@@ -4,7 +4,7 @@ import backend.Neuron;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-abstract class Layer {
+abstract public class Layer {
     protected int numberOfInputs;
     protected Neuron[] neurons;
 
