@@ -3,7 +3,10 @@ package backend;
 import backend.layer.DuplicationNeuronLayer;
 import backend.layer.SigmoidalNeuronLayer;
 
-public class NeuralNetwork {
+import java.io.Serializable;
+import java.util.Arrays;
+
+public class NeuralNetwork implements Serializable {
     DuplicationNeuronLayer inputLayer;
     SigmoidalNeuronLayer[] hiddenLayers;
     SigmoidalNeuronLayer outputLayer;
@@ -29,6 +32,7 @@ public class NeuralNetwork {
         this.numberOfNeuronsInHiddenLayer = numberOfNeuronsInHiddenLayer;
 
         inputLayer = new DuplicationNeuronLayer(numberOfInputs);
+        hiddenLayers = new SigmoidalNeuronLayer[numberOfHiddenLayers];
 
         int layerNumberOfInputs = numberOfInputs;
         for (int i = 0; i < numberOfHiddenLayers; i++) {
@@ -36,13 +40,13 @@ public class NeuralNetwork {
             layerNumberOfInputs = numberOfNeuronsInHiddenLayer;
         }
 
-        outputLayer = new SigmoidalNeuronLayer((int) Math.ceil(Math.sqrt(layerNumberOfInputs * numberOfOutputs)), numberOfOutputs);
+        outputLayer = new SigmoidalNeuronLayer(numberOfNeuronsInHiddenLayer, numberOfOutputs);
     }
 
     public double[] calculateOutput(double[] input) {
         double[] previousLayerResults = inputLayer.getOutputArray(input);
         for (SigmoidalNeuronLayer hiddenLayer : hiddenLayers) {
-            hiddenLayer.getOutputArray(previousLayerResults);
+            previousLayerResults = hiddenLayer.getOutputArray(previousLayerResults);
         }
         return outputLayer.getOutputArray(previousLayerResults);
     }

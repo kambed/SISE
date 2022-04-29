@@ -8,3 +8,4 @@ venv/
 *.txt
 *.jar
 MANIFEST.MF
+*.bin
