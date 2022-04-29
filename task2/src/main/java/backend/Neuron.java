@@ -45,7 +45,10 @@ public class Neuron {
         weights[index] = weight;
     }
 
-    public double getFreeExpression() {
+    public double getFreeExpression() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("This neuron is in working time.");
+        }
         return freeExpression;
     }
 
@@ -69,7 +72,7 @@ public class Neuron {
             totalNeuronExcitation += input[i] * weights[i];
         }
 
-        return activationFunction.apply(totalNeuronExcitation);
+        return activationFunction.apply(totalNeuronExcitation + freeExpression);
     }
 
     public boolean isLearningTime() {

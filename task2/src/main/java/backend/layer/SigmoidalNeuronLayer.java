@@ -2,7 +2,7 @@ package backend.layer;
 
 import backend.Neuron;
 
-public class SigmoidalNeuronLayer extends backend.layer.Layer {
+public class SigmoidalNeuronLayer extends Layer {
     public SigmoidalNeuronLayer(int numberOfInputs, int numberOfNeurons) {
         super(numberOfInputs, numberOfNeurons);
         for (int i = 0; i < neurons.length; i++) {
