@@ -80,7 +80,7 @@ public class Main {
                     System.out.print("Podaj plik z danymi: ");
                     double[][] data = FileOperator.readData(Paths.get(new Scanner(System.in).nextLine()));
                     for (int i = 1; i <= data.length; i++) {
-                        System.out.println("Dane " + i + Arrays.toString(nn.calculateOutput(data[i])));
+                        System.out.println("Dane " + i + Arrays.toString(nn.calculateOutput(data[i - 1])));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -90,12 +90,5 @@ public class Main {
                 System.out.println("Wybrano nie prawidłową opcje");
                 return;
         }
-
-
-        
-
-
-
-
     }
 }

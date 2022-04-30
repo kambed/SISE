@@ -4,6 +4,9 @@ package backend;
 import backend.layer.Layer;
 
 import java.lang.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Teacher {
     private NeuralNetwork neuralNetwork;
@@ -18,10 +21,15 @@ public class Teacher {
 
     public void changeWeightWithBackpropagation(int numOfEras, double[][] inputs, double[][] expected_outputs) {
         this.neuralNetwork.switchToLearningTime();
+        List<Integer> order = new ArrayList<>();
+        for (int i = 0; i < inputs.length; i++) {
+            order.add(i);
+        }
+        Collections.shuffle(order);
         for (int i = 0; i < numOfEras; i++) {
             for (int j = 0; j < inputs.length; j++) {
                 try {
-                    backpropagationAlgorithm(inputs[j], expected_outputs[j]);
+                    backpropagationAlgorithm(inputs[order.get(j)], expected_outputs[order.get(j)]);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
