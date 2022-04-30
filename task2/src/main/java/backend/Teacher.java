@@ -69,7 +69,7 @@ public class Teacher {
             for (int i = 0; i < numOfConnectionsInLayer; i++) {
                 if (hLayer == 0) {
                     for (int j = 0; j < finalOutputs.length; j++) {
-                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[i / neuralNetwork.getOutputLayer().getNeurons().length];
+                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[i / numOfNeuronsInPreviousLayer];
                         totalErrorDerivatives[i] += totalNeuronOutputErrorDerivativesOfOutputLayer[j] * weight;
                     }
                 } else {
