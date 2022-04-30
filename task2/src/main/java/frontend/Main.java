@@ -3,6 +3,7 @@ package frontend;
 import backend.NeuralNetwork;
 import backend.Teacher;
 import backend.dao.FileNeuralNetworkDao;
+import backend.dao.FileOperator;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -41,20 +42,16 @@ public class Main {
                 System.out.print("Podaj ilosc er: ");
                 int eras = new Scanner(System.in).nextInt();
 
-                double[][] data = new double[][]{
-                        {1, 0, 0, 0},
-                        {0, 1, 0, 0},
-                        {0, 0, 1, 0},
-                        {0, 0, 0, 1}
-                };
-                double[][] outputs = new double[][]{
-                        {1, 0, 0, 0},
-                        {0, 1, 0, 0},
-                        {0, 0, 1, 0},
-                        {0, 0, 0, 1}
-                };
 
-                t.changeWeightWithBackpropagation(eras, data, outputs);
+                try {
+                    System.out.print("Podaj plik z danymi: ");
+                    double[][] data = FileOperator.readData(Paths.get(new Scanner(System.in).nextLine()));
+                    System.out.print("Podaj plik z wartosciami wyjsciowymi: ");
+                    double[][] outputs = FileOperator.readData(Paths.get(new Scanner(System.in).nextLine()));
+                    t.changeWeightWithBackpropagation(eras, data, outputs);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 learned = true;
 
                 System.out.print("Czy chcesz zapisać sieć: ");
@@ -79,10 +76,15 @@ public class Main {
                         e.printStackTrace();
                     }
                 }
-                System.out.println(Arrays.toString(nn.calculateOutput(new double[]{1, 0, 0, 0})));
-                System.out.println(Arrays.toString(nn.calculateOutput(new double[]{0, 1, 0, 0})));
-                System.out.println(Arrays.toString(nn.calculateOutput(new double[]{0, 0, 1, 0})));
-                System.out.println(Arrays.toString(nn.calculateOutput(new double[]{0, 0, 0, 1})));
+                try {
+                    System.out.print("Podaj plik z danymi: ");
+                    double[][] data = FileOperator.readData(Paths.get(new Scanner(System.in).nextLine()));
+                    for (int i = 1; i <= data.length; i++) {
+                        System.out.println("Dane " + i + Arrays.toString(nn.calculateOutput(data[i])));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("Wybrano nie prawidłową opcje");
