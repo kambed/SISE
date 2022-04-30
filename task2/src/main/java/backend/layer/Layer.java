@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-abstract class Layer implements Serializable {
+abstract public class Layer implements Serializable {
     protected int numberOfInputs;
     protected Neuron[] neurons;
     protected double[] lastWeightChange;
