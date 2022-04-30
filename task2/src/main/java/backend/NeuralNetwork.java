@@ -3,7 +3,10 @@ package backend;
 import backend.layer.DuplicationNeuronLayer;
 import backend.layer.SigmoidalNeuronLayer;
 
-public class NeuralNetwork {
+import java.io.Serializable;
+import java.util.Arrays;
+
+public class NeuralNetwork implements Serializable {
     DuplicationNeuronLayer inputLayer;
     SigmoidalNeuronLayer[] hiddenLayers;
     SigmoidalNeuronLayer outputLayer;
