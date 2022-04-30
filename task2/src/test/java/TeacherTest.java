@@ -27,7 +27,7 @@ public class TeacherTest {
         assertEquals(0.77293,results[1], 0.01);
 
         Teacher t = new Teacher(nn, 0.9, 0.6);
-        t.changeWeightWithBackpropagation(1000,new double[][]{{0.05, 0.1}},new double[][]{{0.01, 0.99}});
+        t.changeWeightWithBackpropagation(1,new double[][]{{0.05, 0.1}},new double[][]{{0.01, 0.99}});
 
         results = nn.calculateOutput(new double[]{0.05, 0.1});
         assertEquals(0.73451,results[0],0.01);
