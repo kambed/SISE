@@ -4,7 +4,6 @@ import backend.layer.DuplicationNeuronLayer;
 import backend.layer.SigmoidalNeuronLayer;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class NeuralNetwork implements Serializable {
     DuplicationNeuronLayer inputLayer;
@@ -17,15 +16,16 @@ public class NeuralNetwork implements Serializable {
     private double[][] layersResult;
     private boolean learningTime = true;
 
-    public NeuralNetwork(int numberOfInputs, int numberOfOutputs, int numberOfNeuronsInHiddenLayer) {
-        this(numberOfInputs, numberOfOutputs, 1, numberOfNeuronsInHiddenLayer);
+    public NeuralNetwork(int numberOfInputs, int numberOfOutputs, int numberOfNeuronsInHiddenLayer, boolean withBais) {
+        this(numberOfInputs, numberOfOutputs, 1, numberOfNeuronsInHiddenLayer, withBais);
     }
 
     public NeuralNetwork(
             int numberOfInputs,
             int numberOfOutputs,
             int numberOfHiddenLayers,
-            int numberOfNeuronsInHiddenLayer
+            int numberOfNeuronsInHiddenLayer,
+            boolean withBais
     ) {
         this.numberOfInputs = numberOfInputs;
         this.numberOfOutputs = numberOfOutputs;
@@ -39,11 +39,11 @@ public class NeuralNetwork implements Serializable {
 
         int layerNumberOfInputs = numberOfInputs;
         for (int i = 0; i < numberOfHiddenLayers; i++) {
-            hiddenLayers[i] = new SigmoidalNeuronLayer(layerNumberOfInputs, numberOfNeuronsInHiddenLayer);
+            hiddenLayers[i] = new SigmoidalNeuronLayer(layerNumberOfInputs, numberOfNeuronsInHiddenLayer, withBais);
             layerNumberOfInputs = numberOfNeuronsInHiddenLayer;
         }
 
-        outputLayer = new SigmoidalNeuronLayer(numberOfNeuronsInHiddenLayer, numberOfOutputs);
+        outputLayer = new SigmoidalNeuronLayer(numberOfNeuronsInHiddenLayer, numberOfOutputs, withBais);
     }
 
     public double[] calculateOutput(double[] input) {
@@ -53,10 +53,6 @@ public class NeuralNetwork implements Serializable {
         }
         layersResult[hiddenLayers.length + 1] = outputLayer.getOutputArray(layersResult[hiddenLayers.length]);
         return layersResult[hiddenLayers.length + 1];
-    }
-
-    public DuplicationNeuronLayer getInputLayer() {
-        return inputLayer;
     }
 
     public SigmoidalNeuronLayer[] getHiddenLayers() {
@@ -69,10 +65,6 @@ public class NeuralNetwork implements Serializable {
 
     public int getNumberOfHiddenLayers() {
         return numberOfHiddenLayers;
-    }
-
-    public int getNumberOfNeuronsInHiddenLayer() {
-        return numberOfNeuronsInHiddenLayer;
     }
 
     public int getNumberOfOutputs() {
