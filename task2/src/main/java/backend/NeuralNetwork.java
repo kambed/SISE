@@ -55,31 +55,45 @@ public class NeuralNetwork implements Serializable {
         return layersResult[hiddenLayers.length + 1];
     }
 
-    public DuplicationNeuronLayer getInputLayer() {
+    public DuplicationNeuronLayer getInputLayer() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("Neural network is in working time.");
+        }
         return inputLayer;
     }
 
-    public SigmoidalNeuronLayer[] getHiddenLayers() {
+    public SigmoidalNeuronLayer[] getHiddenLayers() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("Neural network is in working time.");
+        }
         return hiddenLayers;
     }
 
-    public SigmoidalNeuronLayer getOutputLayer() {
+    public SigmoidalNeuronLayer getOutputLayer() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("Neural network is in working time.");
+        }
         return outputLayer;
     }
 
-    public int getNumberOfHiddenLayers() {
+    public int getNumberOfHiddenLayers() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("Neural network is in working time.");
+        }
         return numberOfHiddenLayers;
     }
 
-    public int getNumberOfNeuronsInHiddenLayer() {
-        return numberOfNeuronsInHiddenLayer;
-    }
-
-    public int getNumberOfOutputs() {
+    public int getNumberOfOutputs() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("Neural network is in working time.");
+        }
         return numberOfOutputs;
     }
 
-    public double[][] getLayersResult() {
+    public double[][] getLayersResult() throws IllegalAccessException {
+        if (!learningTime) {
+            throw new IllegalAccessException("Neural network is in working time.");
+        }
         return layersResult;
     }
 

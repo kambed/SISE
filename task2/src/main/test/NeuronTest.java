@@ -13,8 +13,8 @@ class NeuronTest {
         assertTrue(neuron.isLearningTime());
         assertDoesNotThrow(neuron::getWeights);
         for (double weight : neuron.getWeights()) {
-            assertTrue(weight < 1.0);
-            assertTrue(weight > -1.0);
+            assertTrue(weight <= 1.0);
+            assertTrue(weight >= -1.0);
         }
         assertTrue(neuron.getFreeExpression() <= 1.0);
         assertTrue(neuron.getFreeExpression() >= -1.0);

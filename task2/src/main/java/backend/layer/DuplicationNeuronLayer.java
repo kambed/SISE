@@ -1,7 +1,6 @@
 package backend.layer;
 
 import backend.DuplicationNeuron;
-import backend.Neuron;
 
 public class DuplicationNeuronLayer extends Layer {
     public DuplicationNeuronLayer(int numberOfInputs) {
