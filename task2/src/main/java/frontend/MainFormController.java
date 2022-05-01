@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class MainFormController {
     public static final String MAIN_FORM_RESOURCE = "MainForm.fxml";
@@ -60,9 +59,9 @@ public class MainFormController {
     @FXML
     Button loadTestDataButton;
     @FXML
-    Button loadLearingOutputDataButton;
+    Button loadLearningOutputDataButton;
     @FXML
-    Button loadLearingDataButton;
+    Button loadLearningDataButton;
     @FXML
     Button saveButton;
     @FXML
@@ -104,7 +103,7 @@ public class MainFormController {
 
     public void loadLearningData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.openChooser("Open learning data file ", actionEvent);
-        if (!stringPath.equals("")) {
+        if (!stringPath.isBlank()) {
             learningDataFilePath.setText(stringPath);
             learnInputs = FileOperator.readData(Paths.get(stringPath));
             consoleArea.appendText("Learning data opened from: " + stringPath + "\n");
@@ -113,7 +112,7 @@ public class MainFormController {
 
     public void loadLearningOutput(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.openChooser("Open learning output data file ", actionEvent);
-        if (!stringPath.equals("")) {
+        if (!stringPath.isBlank()) {
             learningOutputFilePath.setText(stringPath);
             learnOutputs = FileOperator.readData(Paths.get(stringPath));
             consoleArea.appendText("Learning output data opened from: " + stringPath + "\n");
@@ -122,7 +121,7 @@ public class MainFormController {
 
     public void loadTestData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.openChooser("Open test data file ", actionEvent);
-        if (!stringPath.equals("")) {
+        if (!stringPath.isBlank()) {
             dataFilePath.setText(stringPath);
             testInputs = FileOperator.readData(Paths.get(stringPath));
             consoleArea.appendText("Test data opened from: " + stringPath + "\n");
@@ -131,7 +130,7 @@ public class MainFormController {
 
     public void loadNeuralNetwork(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.openChooser("Open file with neural network ", actionEvent);
-        if (!stringPath.equals("")) {
+        if (!stringPath.isBlank()) {
             FileNeuralNetworkDao fnnd = new FileNeuralNetworkDao(Paths.get(stringPath).toAbsolutePath().toString());
             nn = fnnd.read();
             consoleArea.appendText("Neural network read from: " + stringPath + "\n");
@@ -139,13 +138,13 @@ public class MainFormController {
             numOfOutputs.setText(String.valueOf(nn.getNumberOfOutputs()));
             numOfHiddenLayers.setText(String.valueOf(nn.getNumberOfHiddenLayers()));
             numOfNeuronsInHiddenLayers.setText(String.valueOf(nn.getNumberOfNeuronsInHiddenLayer()));
-            withBias.setSelected(nn.isWithBais());
+            withBias.setSelected(nn.isWithBias());
         }
     }
 
     public void saveNeuralNetwork(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.saveChooser("Save neural network to file ", actionEvent);
-        if (!stringPath.equals("")) {
+        if (!stringPath.isBlank()) {
             FileNeuralNetworkDao fnnd = new FileNeuralNetworkDao(Paths.get(stringPath).toAbsolutePath().toString());
             fnnd.write(nn);
             consoleArea.appendText("Neural network saved to: " + stringPath + "\n");
@@ -154,7 +153,7 @@ public class MainFormController {
 
     public void saveLogs(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.saveChooser("Save logs to file ", actionEvent);
-        if (!stringPath.equals("")) {
+        if (!stringPath.isBlank()) {
             Files.write(Paths.get(stringPath), consoleArea.getText().getBytes());
             consoleArea.setText("");
             consoleArea.appendText("Logs saved saved to: " + stringPath + "\n");
@@ -184,7 +183,7 @@ public class MainFormController {
         learningRate.setDisable(!learningMode);
         momentumRate.setDisable(!learningMode);
         numOfEras.setDisable(!learningMode);
-        learningDataFilePath.setDisable(!learningMode);
-        learningOutputFilePath.setDisable(!learningMode);
+        loadLearningOutputDataButton.setDisable(!learningMode);
+        loadLearningDataButton.setDisable(!learningMode);
     }
 }

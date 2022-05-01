@@ -10,13 +10,13 @@ import java.util.List;
 
 public class Teacher {
     private NeuralNetwork neuralNetwork;
-    private double learingRate;
+    private double learningRate;
     private double momentumRate;
     double[] totalNeuronOutputErrorDerivativesOfOutputLayer;
 
-    public Teacher(NeuralNetwork neuralNetwork, double learingRate, double momentumRate) {
+    public Teacher(NeuralNetwork neuralNetwork, double learningRate, double momentumRate) {
         this.neuralNetwork = neuralNetwork;
-        this.learingRate = learingRate;
+        this.learningRate = learningRate;
         this.momentumRate = momentumRate;
     }
 
@@ -57,8 +57,9 @@ public class Teacher {
         for (int i = 0; i < layer.getNeurons().length; i++) {
             int numOfWeightInNeuron = layer.getNeuron(i).getWeights().length;
             for (int j = 0; j < numOfWeightInNeuron; j++) {
-                layer.getNeuron(i).setWeight(j, layer.getNeuron(i).getWeights()[j] - ((weightsError[i * layer.getNeuron(i).getWeights().length + j] * learingRate) + (momentumRate * layer.getLastWeightChange()[j])));
-                layer.setLastWeightChange(j, (weightsError[i * layer.getNeuron(i).getWeights().length + j] * learingRate) + (momentumRate * layer.getLastWeightChange()[j]));
+                double weightError = (weightsError[i * layer.getNeuron(i).getWeights().length + j] * learningRate) + (momentumRate * layer.getLastWeightChange()[j]);
+                layer.getNeuron(i).setWeight(j, layer.getNeuron(i).getWeights()[j] - weightError);
+                layer.setLastWeightChange(j, weightError);
             }
         }
     }
@@ -94,19 +95,21 @@ public class Teacher {
             int numOfConnectionsInLayer = numOfNeuronsInPreviousLayer * outputs.length;
             for (int i = 0; i < numOfConnectionsInLayer; i++) {
                 double totalErrorDerivative = 0;
+                int outputNum = i / numOfNeuronsInPreviousLayer;
                 if (hLayer == 0) {
-                    for (int j = 0; j < finalOutputs.length; j++) {
-                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[i / numOfNeuronsInPreviousLayer];
+                    for (int j = 0; j < neuralNetwork.getNumberOfOutputs(); j++) {
+                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[outputNum];
                         totalErrorDerivative += totalNeuronOutputErrorDerivativesOfOutputLayer[j] * weight;
                     }
                 } else {
-                    for (int j = 0; j < neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeurons().length; j++) {
+                    int numOfNeurons = neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeurons().length;
+                    for (int j = 0; j < numOfNeurons; j++) {
                         totalErrorDerivative += totalNeuronOutputErrorDerivativesOfOutputLayer[j] *
                                 neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeuron(j).getWeights()[i / neuralNetwork.getOutputLayer().getNeurons().length];
                     }
                 }
-                double neuronOutputErrorDerivative = outputs[i / numOfNeuronsInPreviousLayer] *
-                        (1 - outputs[i / numOfNeuronsInPreviousLayer]);
+                double neuronOutputErrorDerivative = outputs[outputNum] *
+                        (1 - outputs[outputNum]);
                 double neuronErrorDerivative = neuralNetwork.getLayersResult()[hiddenLayerNum - 1][i % numOfNeuronsInPreviousLayer];
                 weightErrorHidden[hLayer][i] = totalErrorDerivative * neuronOutputErrorDerivative * neuronErrorDerivative;
             }

@@ -10,7 +10,7 @@ public class Neuron implements Serializable {
     private final SerializableFunction activationFunction;
     private boolean learningTime = true;
 
-    public Neuron(int numberOfInputs, SerializableFunction activationFunction, boolean withBais) {
+    public Neuron(int numberOfInputs, SerializableFunction activationFunction, boolean withBias) {
         this.numberOfInputs = numberOfInputs;
         this.weights = new Double[numberOfInputs];
         this.activationFunction = activationFunction;
@@ -19,8 +19,10 @@ public class Neuron implements Serializable {
                 weights[i] = (new Random()).nextDouble(-1.0, 1.0);
             } while (weights[i] == 0);
         }
-        if (withBais) {
-            this.freeExpression = 1;
+        if (withBias) {
+            do {
+                this.freeExpression = (new Random()).nextDouble(-1.0, 1.0);
+            } while (this.freeExpression == 0);
         } else {
             this.freeExpression = 0;
         }

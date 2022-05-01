@@ -13,12 +13,12 @@ public class NeuralNetwork implements Serializable {
     private int numberOfOutputs;
     private int numberOfHiddenLayers = 1;
     private int numberOfNeuronsInHiddenLayer;
-    private boolean withBais;
+    private boolean withBias;
     private double[][] layersResult;
     private boolean learningTime = true;
 
-    public NeuralNetwork(int numberOfInputs, int numberOfOutputs, int numberOfNeuronsInHiddenLayer, boolean withBais) {
-        this(numberOfInputs, numberOfOutputs, 1, numberOfNeuronsInHiddenLayer, withBais);
+    public NeuralNetwork(int numberOfInputs, int numberOfOutputs, int numberOfNeuronsInHiddenLayer, boolean withBias) {
+        this(numberOfInputs, numberOfOutputs, 1, numberOfNeuronsInHiddenLayer, withBias);
     }
 
     public NeuralNetwork(
@@ -26,14 +26,14 @@ public class NeuralNetwork implements Serializable {
             int numberOfOutputs,
             int numberOfHiddenLayers,
             int numberOfNeuronsInHiddenLayer,
-            boolean withBais
+            boolean withBias
     ) {
         this.numberOfInputs = numberOfInputs;
         this.numberOfOutputs = numberOfOutputs;
         this.numberOfHiddenLayers = numberOfHiddenLayers;
         this.numberOfNeuronsInHiddenLayer = numberOfNeuronsInHiddenLayer;
-        this.withBais = withBais;
-
+        this.withBias = withBias;
+        
         layersResult = new double[numberOfHiddenLayers + 2][];
 
         inputLayer = new DuplicationNeuronLayer(numberOfInputs);
@@ -41,11 +41,11 @@ public class NeuralNetwork implements Serializable {
 
         int layerNumberOfInputs = numberOfInputs;
         for (int i = 0; i < numberOfHiddenLayers; i++) {
-            hiddenLayers[i] = new SigmoidalNeuronLayer(layerNumberOfInputs, numberOfNeuronsInHiddenLayer, withBais);
+            hiddenLayers[i] = new SigmoidalNeuronLayer(layerNumberOfInputs, numberOfNeuronsInHiddenLayer, withBias);
             layerNumberOfInputs = numberOfNeuronsInHiddenLayer;
         }
 
-        outputLayer = new SigmoidalNeuronLayer(numberOfNeuronsInHiddenLayer, numberOfOutputs, withBais);
+        outputLayer = new SigmoidalNeuronLayer(numberOfNeuronsInHiddenLayer, numberOfOutputs, withBias);
     }
 
     public double[] calculateOutput(double[] input) {
@@ -84,7 +84,7 @@ public class NeuralNetwork implements Serializable {
         }
         return layersResult;
     }
-    
+
     public int getNumberOfHiddenLayers() {
         return numberOfHiddenLayers;
     }
@@ -101,8 +101,8 @@ public class NeuralNetwork implements Serializable {
         return numberOfNeuronsInHiddenLayer;
     }
 
-    public boolean isWithBais() {
-        return withBais;
+    public boolean isWithBias() {
+        return withBias;
     }
 
     public boolean isLearningTime() {
