@@ -1,12 +1,12 @@
 package backend.layer;
 
-import backend.Neuron;
+import backend.DuplicationNeuron;
 
 public class DuplicationNeuronLayer extends Layer {
     public DuplicationNeuronLayer(int numberOfInputs) {
         super(numberOfInputs, numberOfInputs);
         for (int i = 0; i < neurons.length; i++) {
-            neurons[i] = new Neuron(1, x -> x);
+            neurons[i] = new DuplicationNeuron();
         }
     }
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NeuronTest {
-    Neuron neuron = new Neuron(1, x -> x);
+    Neuron neuron = new Neuron(1, x -> x, true);
 
     @Test
     @DisplayName("Create Neuron test")
@@ -13,11 +13,11 @@ class NeuronTest {
         assertTrue(neuron.isLearningTime());
         assertDoesNotThrow(neuron::getWeights);
         for (double weight : neuron.getWeights()) {
-            assertTrue(weight < 1.0);
-            assertTrue(weight > -1.0);
+            assertTrue(weight <= 1.0);
+            assertTrue(weight >= -1.0);
         }
-        assertTrue(neuron.getFreeExpression() < 1.0);
-        assertTrue(neuron.getFreeExpression() > -1.0);
+        assertTrue(neuron.getFreeExpression() <= 1.0);
+        assertTrue(neuron.getFreeExpression() >= -1.0);
     }
 
     @Test

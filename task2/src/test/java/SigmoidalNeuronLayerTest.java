@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SigmoidalNeuronLayerTest {
-    SigmoidalNeuronLayer sigmoidalLayer = new SigmoidalNeuronLayer(2, 2);
+    SigmoidalNeuronLayer sigmoidalLayer = new SigmoidalNeuronLayer(2, 2, true);
     @Test
     @DisplayName("Create sigmoidal neuron layer test")
     void createSigmoidalNeuronLayerTest() {
