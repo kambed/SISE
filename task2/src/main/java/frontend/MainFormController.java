@@ -91,7 +91,7 @@ public class MainFormController {
                 Double.parseDouble(learningRate.getText()) + " learning rate, " +
                 Double.parseDouble(momentumRate.getText()) + " momentum rate \n");
         for (int i = 0; i < Integer.parseInt(numOfEras.getText()) - 1; i += 10) {
-            consoleArea.appendText("Error after " + i + "eras" + t.calculateError(learnInputs, learnOutputs) + "\n");
+            consoleArea.appendText("Error after " + i + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
             t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
         }
         if (Integer.parseInt(numOfEras.getText()) % 10 == 0) {
@@ -99,7 +99,7 @@ public class MainFormController {
         } else {
             t.changeWeightWithBackpropagation(Integer.parseInt(numOfEras.getText()) % 10, learnInputs, learnOutputs);
         }
-        consoleArea.appendText("Error after " + numOfEras.getText() + "eras" + t.calculateError(learnInputs, learnOutputs) + "\n");
+        consoleArea.appendText("Error after " + numOfEras.getText() + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
     }
 
     public void loadLearningData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {

@@ -78,24 +78,19 @@ public class NeuralNetwork implements Serializable {
         return outputLayer;
     }
 
-    public int getNumberOfHiddenLayers() throws IllegalAccessException {
-        if (!learningTime) {
-            throw new IllegalAccessException("Neural network is in working time.");
-        }
-        return numberOfHiddenLayers;
-    }
-
-    public int getNumberOfOutputs() throws IllegalAccessException {
-        if (!learningTime) {
-            throw new IllegalAccessException("Neural network is in working time.");
-        }
-        return numberOfOutputs;
-    }
-
     public double[][] getLayersResult() throws IllegalAccessException {
         if (!learningTime) {
             throw new IllegalAccessException("Neural network is in working time.");
         }
+        return layersResult;
+    }
+    
+    public int getNumberOfHiddenLayers() {
+        return numberOfHiddenLayers;
+    }
+
+    public int getNumberOfOutputs() {
+        return numberOfOutputs;
     }
 
     public int getNumberOfInputs() {
