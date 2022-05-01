@@ -12,62 +12,62 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="719.0" prefWidth="959.0" style="-fx-background-color: #000055;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.MainFormController">
    <children>
-      <TextField layoutX="792.0" layoutY="241.0" opacity="0.6" />
+      <TextField fx:id="numOfInputs" layoutX="792.0" layoutY="241.0" opacity="0.6" />
       <Label layoutX="744.0" layoutY="241.0" prefHeight="25.0" prefWidth="42.0" text="Inputs:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
-      <TextField layoutX="792.0" layoutY="281.0" opacity="0.6" />
+      <TextField fx:id="numOfOutputs" layoutX="792.0" layoutY="281.0" opacity="0.6" />
       <Label layoutX="733.0" layoutY="281.0" prefHeight="25.0" prefWidth="53.0" text="Outputs:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
-      <TextField layoutX="792.0" layoutY="320.0" opacity="0.6" />
+      <TextField fx:id="numOfHiddenLayers" layoutX="792.0" layoutY="320.0" opacity="0.6" />
       <Label layoutX="706.0" layoutY="320.0" prefHeight="25.0" prefWidth="83.0" text="Hidden layers:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
-      <TextField layoutX="792.0" layoutY="360.0" opacity="0.6" />
+      <TextField fx:id="numOfNeuronsInHiddenLayers" layoutX="792.0" layoutY="360.0" opacity="0.6" />
       <Label layoutX="641.0" layoutY="360.0" prefHeight="25.0" prefWidth="149.0" text="Neurons in hidden layers:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
-      <TextField layoutX="794.0" layoutY="455.0" opacity="0.6" />
+      <TextField fx:id="learningRate" layoutX="794.0" layoutY="455.0" opacity="0.6" />
       <Label layoutX="711.0" layoutY="455.0" prefHeight="25.0" prefWidth="83.0" text="Learning rate:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField layoutX="794.0" layoutY="495.0" opacity="0.6" />
+      <TextField fx:id="momentumRate" layoutX="794.0" layoutY="495.0" opacity="0.6" />
       <Label layoutX="694.0" layoutY="495.0" prefHeight="25.0" prefWidth="97.0" text="Momentum rate:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField layoutX="794.0" layoutY="535.0" opacity="0.6" />
+      <TextField fx:id="numOfEras" layoutX="794.0" layoutY="535.0" opacity="0.6" />
       <Label layoutX="667.0" layoutY="535.0" prefHeight="25.0" prefWidth="130.0" text="Number of iterations:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <Button layoutX="382.0" layoutY="655.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="141.0" text="Load">
+      <Button fx:id="loadButton" disable="true" layoutX="382.0" layoutY="655.0" mnemonicParsing="false" onAction="#loadNeuralNetwork" prefHeight="48.0" prefWidth="141.0" text="Load">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="382.0" layoutY="597.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="141.0" text="Save">
+      <Button fx:id="saveButton" layoutX="382.0" layoutY="597.0" mnemonicParsing="false" onAction="#saveNeuralNetwork" prefHeight="48.0" prefWidth="141.0" text="Save">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Button>
-      <TextField disable="true" layoutX="740.0" layoutY="590.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
-      <TextField disable="true" layoutX="740.0" layoutY="630.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
-      <Button layoutX="688.0" layoutY="590.0" mnemonicParsing="false" text="Load">
+      <TextField fx:id="learningDataFilePath" disable="true" layoutX="740.0" layoutY="590.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
+      <TextField fx:id="learningOutputFilePath" disable="true" layoutX="740.0" layoutY="630.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
+      <Button fx:id="loadLearingDataButton" layoutX="688.0" layoutY="590.0" mnemonicParsing="false" onAction="#loadLearningData" text="Load">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="688.0" layoutY="630.0" mnemonicParsing="false" text="Load">
+      <Button fx:id="loadLearingOutputDataButton" layoutX="688.0" layoutY="630.0" mnemonicParsing="false" onAction="#loadLearningOutput" text="Load">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -82,9 +82,12 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextArea disable="true" layoutX="133.0" layoutY="108.0" opacity="0.6" prefHeight="393.0" prefWidth="393.0" />
-      <TextField disable="true" layoutX="142.0" layoutY="625.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
-      <Button layoutX="90.0" layoutY="625.0" mnemonicParsing="false" text="Load">
+      <TextArea fx:id="consoleArea" editable="false" layoutX="133.0" layoutY="108.0" opacity="0.6" prefHeight="393.0" prefWidth="393.0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></TextArea>
+      <TextField fx:id="dataFilePath" disable="true" layoutX="142.0" layoutY="625.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
+      <Button fx:id="loadTestDataButton" disable="true" layoutX="90.0" layoutY="625.0" mnemonicParsing="false" onAction="#loadTestData" text="Load">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -94,13 +97,13 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <CheckBox layoutX="792.0" layoutY="400.0" mnemonicParsing="false" />
+      <CheckBox fx:id="withBias" layoutX="792.0" layoutY="400.0" mnemonicParsing="false" />
       <Label layoutX="757.0" layoutY="397.0" prefHeight="25.0" prefWidth="29.0" text="Bias:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <RadioButton layoutX="694.0" layoutY="26.0" mnemonicParsing="false" selected="true" text="Learning mode" textFill="WHITE">
+      <RadioButton fx:id="learnRadioButton" layoutX="694.0" layoutY="26.0" mnemonicParsing="false" onAction="#changeMode" selected="true" text="Learning mode" textFill="WHITE">
          <font>
             <Font name="System Bold Italic" size="28.0" />
          </font>
@@ -108,22 +111,22 @@
             <ToggleGroup fx:id="mode" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton layoutX="20.0" layoutY="26.0" mnemonicParsing="false" text="Working mode" textFill="WHITE" toggleGroup="$mode">
+      <RadioButton fx:id="workRadioButton" layoutX="20.0" layoutY="26.0" mnemonicParsing="false" onAction="#changeMode" text="Working mode" textFill="WHITE" toggleGroup="$mode">
          <font>
             <Font name="System Bold Italic" size="28.0" />
          </font>
       </RadioButton>
-      <Button layoutX="133.0" layoutY="508.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="393.0" text="Save">
+      <Button layoutX="133.0" layoutY="508.0" mnemonicParsing="false" onAction="#saveLogs" prefHeight="25.0" prefWidth="393.0" text="Save">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="21.0" layoutY="664.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="328.0" text="Calculate">
+      <Button fx:id="calculateButton" disable="true" layoutX="21.0" layoutY="664.0" mnemonicParsing="false" onAction="#startCalculating" prefHeight="31.0" prefWidth="328.0" text="Calculate">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="558.0" layoutY="664.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="387.0" text="Learn">
+      <Button fx:id="learnButton" layoutX="558.0" layoutY="664.0" mnemonicParsing="false" onAction="#startLearning" prefHeight="35.0" prefWidth="387.0" text="Learn">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>

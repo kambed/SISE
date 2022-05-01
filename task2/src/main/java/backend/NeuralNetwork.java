@@ -13,6 +13,7 @@ public class NeuralNetwork implements Serializable {
     private int numberOfOutputs;
     private int numberOfHiddenLayers = 1;
     private int numberOfNeuronsInHiddenLayer;
+    private boolean withBais;
     private double[][] layersResult;
     private boolean learningTime = true;
 
@@ -31,6 +32,7 @@ public class NeuralNetwork implements Serializable {
         this.numberOfOutputs = numberOfOutputs;
         this.numberOfHiddenLayers = numberOfHiddenLayers;
         this.numberOfNeuronsInHiddenLayer = numberOfNeuronsInHiddenLayer;
+        this.withBais = withBais;
 
         layersResult = new double[numberOfHiddenLayers + 2][];
 
@@ -69,6 +71,18 @@ public class NeuralNetwork implements Serializable {
 
     public int getNumberOfOutputs() {
         return numberOfOutputs;
+    }
+
+    public int getNumberOfInputs() {
+        return numberOfInputs;
+    }
+
+    public int getNumberOfNeuronsInHiddenLayer() {
+        return numberOfNeuronsInHiddenLayer;
+    }
+
+    public boolean isWithBais() {
+        return withBais;
     }
 
     public double[][] getLayersResult() {

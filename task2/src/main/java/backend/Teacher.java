@@ -102,8 +102,20 @@ public class Teacher {
         for (int i = 0; i < layer.getNeurons().length; i++) {
             for (int j = 0; j < layer.getNeuron(i).getWeights().length; j++) {
                 layer.getNeuron(i).setWeight(j, layer.getNeuron(i).getWeights()[j] - ((weightsError[i * layer.getNeuron(i).getWeights().length + j] * learingRate) + (momentumRate * layer.getLastWeightChange()[j])));
-                layer.setLastWeightChange(j,(weightsError[i * layer.getNeuron(i).getWeights().length + j] * learingRate) + (momentumRate * layer.getLastWeightChange()[j]));
+                layer.setLastWeightChange(j, (weightsError[i * layer.getNeuron(i).getWeights().length + j] * learingRate) + (momentumRate * layer.getLastWeightChange()[j]));
             }
         }
+    }
+
+    public double calculateError(double[][] inputs, double[][] expectedOutputs) {
+        double totalError = 0;
+        double[][] outputs = new double[expectedOutputs.length][expectedOutputs[0].length];
+        for (int i = 0; i < expectedOutputs.length; i++) {
+            outputs[i] = neuralNetwork.calculateOutput(inputs[i]);
+            for (int j = 0; j < outputs[i].length; j++) {
+                totalError += ((expectedOutputs[i][j] - outputs[i][j]) * (expectedOutputs[i][j] - outputs[i][j])) / 2;
+            }
+        }
+        return totalError / expectedOutputs.length;
     }
 }
