@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileNeuralNetworkDaoTest {
-    NeuralNetwork nn = new NeuralNetwork(4, 3, 2);
+    NeuralNetwork nn = new NeuralNetwork(4, 3, 2, true);
 
     @Test
     @DisplayName("NeuralNetwork serialize test")

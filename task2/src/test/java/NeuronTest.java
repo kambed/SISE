@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NeuronTest {
-    Neuron neuron = new Neuron(1, x -> x);
+    Neuron neuron = new Neuron(1, x -> x, true);
 
     @Test
     @DisplayName("Create Neuron test")

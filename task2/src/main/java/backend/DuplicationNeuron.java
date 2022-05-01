@@ -3,7 +3,7 @@ package backend;
 public class DuplicationNeuron extends Neuron {
 
     public DuplicationNeuron() {
-        super(1, x -> x);
+        super(1, x -> x, false);
     }
 
     @Override

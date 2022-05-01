@@ -2,7 +2,6 @@ package backend;
 
 import java.io.Serializable;
 import java.util.Random;
-import java.util.function.Function;
 
 public class Neuron implements Serializable {
     private final int numberOfInputs;
@@ -11,7 +10,7 @@ public class Neuron implements Serializable {
     private final SerializableFunction activationFunction;
     private boolean learningTime = true;
 
-    public Neuron(int numberOfInputs, SerializableFunction activationFunction) {
+    public Neuron(int numberOfInputs, SerializableFunction activationFunction, boolean withBais) {
         this.numberOfInputs = numberOfInputs;
         this.weights = new Double[numberOfInputs];
         this.activationFunction = activationFunction;
@@ -20,7 +19,11 @@ public class Neuron implements Serializable {
                 weights[i] = (new Random()).nextDouble(-1.0, 1.0);
             } while (weights[i] == 0);
         }
-        this.freeExpression = 1;
+        if (withBais) {
+            this.freeExpression = 1;
+        } else {
+            this.freeExpression = 0;
+        }
     }
 
     public Double[] getWeights() throws IllegalAccessException {

@@ -3,10 +3,10 @@ package backend.layer;
 import backend.Neuron;
 
 public class SigmoidalNeuronLayer extends Layer {
-    public SigmoidalNeuronLayer(int numberOfInputs, int numberOfNeurons) {
+    public SigmoidalNeuronLayer(int numberOfInputs, int numberOfNeurons, boolean withBais) {
         super(numberOfInputs, numberOfNeurons);
         for (int i = 0; i < neurons.length; i++) {
-            neurons[i] = new Neuron(numberOfInputs, x -> (1 / (1 + Math.exp(-x))) );
+            neurons[i] = new Neuron(numberOfInputs, x -> (1 / (1 + Math.exp(-x))), withBais);
         }
     }
 

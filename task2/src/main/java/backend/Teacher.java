@@ -4,6 +4,9 @@ package backend;
 import backend.layer.Layer;
 
 import java.lang.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Teacher {
     private NeuralNetwork neuralNetwork;
@@ -19,10 +22,15 @@ public class Teacher {
 
     public void changeWeightWithBackpropagation(int numOfEras, double[][] inputs, double[][] expectedOutputs) {
         this.neuralNetwork.switchToLearningTime();
+        List<Integer> order = new ArrayList<>();
+        for (int i = 0; i < inputs.length; i++) {
+            order.add(i);
+        }
+        Collections.shuffle(order);
         for (int i = 0; i < numOfEras; i++) {
             for (int j = 0; j < inputs.length; j++) {
                 try {
-                    backpropagationAlgorithm(inputs[j], expectedOutputs[j]);
+                    backpropagationAlgorithm(inputs[order.get(j)], expectedOutputs[order.get(j)]);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -100,7 +108,7 @@ public class Teacher {
             for (int i = 0; i < numOfConnectionsInLayer; i++) {
                 if (hLayer == 0) {
                     for (int j = 0; j < finalOutputs.length; j++) {
-                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[i / neuralNetwork.getOutputLayer().getNeurons().length];
+                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[i / numOfNeuronsInPreviousLayer];
                         totalErrorDerivatives[i] += totalNeuronOutputErrorDerivativesOfOutputLayer[j] * weight;
                     }
                 } else {
@@ -116,5 +124,17 @@ public class Teacher {
             }
         }
         return weightErrorHidden;
+    }
+
+    public double calculateError(double[][] inputs, double[][] expectedOutputs) {
+        double totalError = 0;
+        double[][] outputs = new double[expectedOutputs.length][expectedOutputs[0].length];
+        for (int i = 0; i < expectedOutputs.length; i++) {
+            outputs[i] = neuralNetwork.calculateOutput(inputs[i]);
+            for (int j = 0; j < outputs[i].length; j++) {
+                totalError += ((expectedOutputs[i][j] - outputs[i][j]) * (expectedOutputs[i][j] - outputs[i][j])) / 2;
+            }
+        }
+        return totalError / expectedOutputs.length;
     }
 }
