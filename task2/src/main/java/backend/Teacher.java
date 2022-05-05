@@ -69,19 +69,15 @@ public class Teacher {
         //edit output layer weights
         int numOfNeuronsInPreviousLayer = neuralNetwork.getLayersResult()[neuralNetwork.getNumberOfHiddenLayers()].length;
         int numOfConnectionsInLayer = numOfNeuronsInPreviousLayer * neuralNetwork.getNumberOfOutputs();
-        double[] totalErrorDerivatives = new double[numOfConnectionsInLayer];
-        double[] neuronOutputErrorDerivatives = new double[numOfConnectionsInLayer];
         double[] weightError = new double[numOfConnectionsInLayer];
-        for (int i = 0; i < numOfConnectionsInLayer; i++) {
-            int outputNum = i / numOfNeuronsInPreviousLayer;
-            totalErrorDerivatives[i] = -(expectedOutputs[outputNum] - outputs[outputNum]);
-            neuronOutputErrorDerivatives[i] = outputs[outputNum] * (1 - outputs[outputNum]);
-            double neuronErrorDerivative = neuralNetwork.getLayersResult()[neuralNetwork.getNumberOfHiddenLayers()][i % numOfNeuronsInPreviousLayer];
-            weightError[i] = totalErrorDerivatives[i] * neuronOutputErrorDerivatives[i] * neuronErrorDerivative;
-        }
         for (int i = 0; i < neuralNetwork.getNumberOfOutputs(); i++) {
-            int outputNum = numOfNeuronsInPreviousLayer * i;
-            totalNeuronOutputErrorDerivativesOfOutputLayer[i] = totalErrorDerivatives[outputNum] * neuronOutputErrorDerivatives[outputNum];
+            double totalErrorDerivatives = -(expectedOutputs[i] - outputs[i]);
+            double neuronOutputErrorDerivatives = outputs[i] * (1 - outputs[i]);
+            for (int j = 0; j < numOfNeuronsInPreviousLayer; j++) {
+                double neuronErrorDerivative = neuralNetwork.getLayersResult()[neuralNetwork.getNumberOfHiddenLayers()][j];
+                weightError[i * numOfNeuronsInPreviousLayer + j] = totalErrorDerivatives * neuronOutputErrorDerivatives * neuronErrorDerivative;
+            }
+            totalNeuronOutputErrorDerivativesOfOutputLayer[i] = totalErrorDerivatives * neuronOutputErrorDerivatives;
         }
         return weightError;
     }
