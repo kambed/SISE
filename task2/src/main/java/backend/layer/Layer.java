@@ -54,5 +54,13 @@ abstract public class Layer implements Serializable {
         return neurons[i];
     }
 
+    public double getNeuronWeight(int neuronIndex, int weightIndex) throws IllegalAccessException {
+        return neurons[neuronIndex].getWeights()[weightIndex];
+    }
+
+    public void updateNeuronWeight(int neuronIndex, int weightIndex, double correction) throws IllegalAccessException {
+        neurons[neuronIndex].setWeight(weightIndex, getNeuronWeight(neuronIndex, weightIndex) + correction);
+    }
+
     public abstract double[] getOutputArray(double[] input);
 }
