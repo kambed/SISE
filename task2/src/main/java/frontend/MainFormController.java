@@ -7,7 +7,11 @@ import backend.dao.FileOperator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -66,6 +70,8 @@ public class MainFormController {
     Button saveButton;
     @FXML
     Button loadButton;
+    @FXML
+    ImageView chart;
 
     public void startCalculating(ActionEvent actionEvent) {
         for (int i = 1; i <= testInputs.length; i++) {
@@ -73,7 +79,7 @@ public class MainFormController {
         }
     }
 
-    public void startLearning(ActionEvent actionEvent) {
+    public void startLearning(ActionEvent actionEvent) throws FileNotFoundException {
         nn = new NeuralNetwork(Integer.parseInt(numOfInputs.getText()),
                 Integer.parseInt(numOfOutputs.getText()),
                 Integer.parseInt(numOfHiddenLayers.getText()),
@@ -99,6 +105,9 @@ public class MainFormController {
             t.changeWeightWithBackpropagation(Integer.parseInt(numOfEras.getText()) % 10, learnInputs, learnOutputs);
         }
         consoleArea.appendText("Error after " + numOfEras.getText() + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
+
+        FileInputStream input = new FileInputStream("./src/main/resources/frontend/background.jpg");
+        chart.setImage(new Image(input));
     }
 
     public void loadLearningData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
