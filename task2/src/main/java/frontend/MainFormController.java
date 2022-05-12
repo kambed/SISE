@@ -98,13 +98,16 @@ public class MainFormController {
                 Double.parseDouble(learningRate.getText()) + " learning rate, " +
                 Double.parseDouble(momentumRate.getText()) + " momentum rate \n");
 
-        double[] eras = new double[Integer.parseInt(numOfEras.getText())];
-        double[] errors = new double[Integer.parseInt(numOfEras.getText())];
-        for (int i = 0; i < Integer.parseInt(numOfEras.getText()) - 1; i++) {
+        int numOfErasInt = Integer.parseInt(numOfEras.getText());
+        double[] eras = new double[numOfErasInt + 1];
+        double[] errors = new double[numOfErasInt + 1];
+        for (int i = 0; i < numOfErasInt; i++) {
             eras[i] = i;
             errors[i] = t.calculateError(learnInputs, learnOutputs);
             t.changeWeightWithBackpropagation(1, learnInputs, learnOutputs);
         }
+        eras[numOfErasInt] = Integer.parseInt(numOfEras.getText());
+        errors[numOfErasInt] = t.calculateError(learnInputs, learnOutputs);
 
         try {
             ChartUtilities.saveChartAsPNG(
