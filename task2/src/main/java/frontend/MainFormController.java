@@ -7,11 +7,13 @@ import backend.dao.FileOperator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.jfree.chart.ChartUtilities;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -95,10 +97,25 @@ public class MainFormController {
         consoleArea.appendText("[TEACHER INITIALIZED]: " +
                 Double.parseDouble(learningRate.getText()) + " learning rate, " +
                 Double.parseDouble(momentumRate.getText()) + " momentum rate \n");
-        for (int i = 0; i < Integer.parseInt(numOfEras.getText()) - 1; i += 10) {
-            consoleArea.appendText("Error after " + i + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
-            t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
+
+        double[] eras = new double[Integer.parseInt(numOfEras.getText())];
+        double[] errors = new double[Integer.parseInt(numOfEras.getText())];
+        for (int i = 0; i < Integer.parseInt(numOfEras.getText()) - 1; i++) {
+            eras[i] = i;
+            errors[i] = t.calculateError(learnInputs, learnOutputs);
+            t.changeWeightWithBackpropagation(1, learnInputs, learnOutputs);
         }
+
+        try {
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart.png"),
+                    ChartGenerator.generatePlot(eras, errors),
+                    400, 220
+            );
+        } catch (IOException e) {
+            System.out.println("Wystapił problem przy generowaniu wykresu.");
+        }
+
         if (Integer.parseInt(numOfEras.getText()) % 10 == 0) {
             t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
         } else {
@@ -106,7 +123,7 @@ public class MainFormController {
         }
         consoleArea.appendText("Error after " + numOfEras.getText() + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
 
-        FileInputStream input = new FileInputStream("./src/main/resources/frontend/background.jpg");
+        FileInputStream input = new FileInputStream("chart.png");
         chart.setImage(new Image(input));
     }
 

@@ -129,7 +129,7 @@ public class Teacher {
         for (int i = 0; i < expectedOutputsLength; i++) {
             outputs[i] = neuralNetwork.calculateOutput(inputs[i]);
             for (int j = 0; j < outputs[i].length; j++) {
-                totalError += ((expectedOutputs[i][j] - outputs[i][j]) * (expectedOutputs[i][j] - outputs[i][j])) / 2;
+                totalError += ((expectedOutputs[i][j] - outputs[i][j]) * (expectedOutputs[i][j] - outputs[i][j]));
             }
         }
         return totalError / expectedOutputsLength;
