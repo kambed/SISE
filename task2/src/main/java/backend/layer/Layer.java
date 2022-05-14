@@ -11,10 +11,13 @@ abstract public class Layer implements Serializable {
     protected Neuron[] neurons;
     protected double[] lastWeightChange;
 
+    protected double[] lastBiasChange;
+
     public Layer(int numberOfInputs, int numberOfNeurons) {
         this.numberOfInputs = numberOfInputs;
         neurons = new Neuron[numberOfNeurons];
         lastWeightChange = new double[numberOfNeurons * numberOfInputs];
+        lastBiasChange = new double[numberOfNeurons];
     }
 
     public double[] getLastWeightChange() {
@@ -23,6 +26,14 @@ abstract public class Layer implements Serializable {
 
     public void setLastWeightChange(int index, double lastWeightChange) {
         this.lastWeightChange[index] = lastWeightChange;
+    }
+
+    public double[] getLastBiasChange() {
+        return lastBiasChange;
+    }
+
+    public void setLastBiasChange(int index, double lastBiasChange) {
+        this.lastBiasChange[index] = lastBiasChange;
     }
 
     public void switchToLearningTime() {
@@ -52,6 +63,22 @@ abstract public class Layer implements Serializable {
 
     public Neuron getNeuron(int i) {
         return neurons[i];
+    }
+
+    public double getNeuronWeight(int neuronIndex, int weightIndex) throws IllegalAccessException {
+        return neurons[neuronIndex].getWeights()[weightIndex];
+    }
+
+    public void updateNeuronWeight(int neuronIndex, int weightIndex, double correction) throws IllegalAccessException {
+        neurons[neuronIndex].setWeight(weightIndex, getNeuronWeight(neuronIndex, weightIndex) + correction);
+    }
+
+    public double getNeuronBias(int neuronIndex) throws IllegalAccessException {
+        return neurons[neuronIndex].getFreeExpression();
+    }
+
+    public void updateNeuronBias(int neuronIndex, double correction) throws IllegalAccessException {
+        neurons[neuronIndex].setFreeExpression(getNeuronBias(neuronIndex) + correction);
     }
 
     public abstract double[] getOutputArray(double[] input);

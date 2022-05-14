@@ -9,3 +9,4 @@ venv/
 *.jar
 MANIFEST.MF
 *.bin
+chart.png

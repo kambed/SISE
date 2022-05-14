@@ -9,13 +9,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class Teacher {
-    private NeuralNetwork neuralNetwork;
-    private double learningRate;
-    private double momentumRate;
-    double[] totalNeuronOutputErrorDerivativesOfOutputLayer;
+    private final NeuralNetwork neuralNetwork;
+    private final double learningRate;
+    private final double momentumRate;
+    private double[] totalNeuronOutputErrorDerivativesOfOutputLayer;
+    private double[][] biasErrorHidden;
+    private final int numOfHiddenLayers;
+    private final int numOfOutputs;
 
     public Teacher(NeuralNetwork neuralNetwork, double learningRate, double momentumRate) {
         this.neuralNetwork = neuralNetwork;
+        this.numOfHiddenLayers = neuralNetwork.getNumberOfHiddenLayers();
+        this.numOfOutputs = neuralNetwork.getNumberOfOutputs();
         this.learningRate = learningRate;
         this.momentumRate = momentumRate;
     }
@@ -40,16 +45,22 @@ public class Teacher {
     }
 
     private void backpropagationAlgorithm(double[] inputs, double[] expectedOutputs) throws IllegalAccessException {
-        double[] finalOutputs = neuralNetwork.calculateOutput(inputs);
-        double[] outputs = neuralNetwork.getLayersResult()[neuralNetwork.getNumberOfHiddenLayers() + 1];
+        neuralNetwork.calculateOutput(inputs);
+        double[] outputs = neuralNetwork.getLayersResult()[numOfHiddenLayers + 1];
 
         double[] weightError = calculateErrorInOutputLayer(outputs, expectedOutputs);
 
-        double[][] weightErrorHidden = calculateErrorInHiddenLayers(finalOutputs);
+        double[][] weightErrorHidden = calculateErrorInHiddenLayers();
 
         editWeights(weightError, neuralNetwork.getOutputLayer());
-        for (int i = 0; i < neuralNetwork.getNumberOfHiddenLayers(); i++) {
-            editWeights(weightErrorHidden[i], neuralNetwork.getHiddenLayers()[neuralNetwork.getNumberOfHiddenLayers() - 1 - i]);
+        for (int i = 0; i < numOfHiddenLayers; i++) {
+            editWeights(weightErrorHidden[i], neuralNetwork.getHiddenLayers()[numOfHiddenLayers - 1 - i]);
+        }
+        if (neuralNetwork.isWithBias()) {
+            editBiases(totalNeuronOutputErrorDerivativesOfOutputLayer, neuralNetwork.getOutputLayer());
+            for (int i = 0; i < numOfHiddenLayers; i++) {
+                editBiases(biasErrorHidden[i], neuralNetwork.getHiddenLayers()[numOfHiddenLayers - 1 - i]);
+            }
         }
     }
 
@@ -57,61 +68,85 @@ public class Teacher {
         for (int i = 0; i < layer.getNeurons().length; i++) {
             int numOfWeightInNeuron = layer.getNeuron(i).getWeights().length;
             for (int j = 0; j < numOfWeightInNeuron; j++) {
-                double weightError = (weightsError[i * layer.getNeuron(i).getWeights().length + j] * learningRate) + (momentumRate * layer.getLastWeightChange()[j]);
-                layer.getNeuron(i).setWeight(j, layer.getNeuron(i).getWeights()[j] - weightError);
+                double weightError = (weightsError[i * layer.getNeuron(i).getWeights().length + j] * learningRate)
+                        + (momentumRate * layer.getLastWeightChange()[j]);
+                layer.updateNeuronWeight(i, j, -weightError);
                 layer.setLastWeightChange(j, weightError);
             }
         }
     }
 
-    private double[] calculateErrorInOutputLayer(double[] outputs, double[] expectedOutputs) throws IllegalAccessException {
-        totalNeuronOutputErrorDerivativesOfOutputLayer = new double[neuralNetwork.getNumberOfOutputs()];
-        //edit output layer weights
-        int numOfNeuronsInPreviousLayer = neuralNetwork.getLayersResult()[neuralNetwork.getNumberOfHiddenLayers()].length;
-        int numOfConnectionsInLayer = numOfNeuronsInPreviousLayer * neuralNetwork.getNumberOfOutputs();
-        double[] totalErrorDerivatives = new double[numOfConnectionsInLayer];
-        double[] neuronOutputErrorDerivatives = new double[numOfConnectionsInLayer];
-        double[] weightError = new double[numOfConnectionsInLayer];
-        for (int i = 0; i < numOfConnectionsInLayer; i++) {
-            int outputNum = i / numOfNeuronsInPreviousLayer;
-            totalErrorDerivatives[i] = -(expectedOutputs[outputNum] - outputs[outputNum]);
-            neuronOutputErrorDerivatives[i] = outputs[outputNum] * (1 - outputs[outputNum]);
-            double neuronErrorDerivative = neuralNetwork.getLayersResult()[neuralNetwork.getNumberOfHiddenLayers()][i % numOfNeuronsInPreviousLayer];
-            weightError[i] = totalErrorDerivatives[i] * neuronOutputErrorDerivatives[i] * neuronErrorDerivative;
+    private void editBiases(double[] biasErrors, Layer layer) throws IllegalAccessException {
+        for (int i = 0; i < layer.getNeurons().length; i++) {
+            double biasError = (biasErrors[i] * learningRate)
+                    + (momentumRate * layer.getLastWeightChange()[i]);
+            layer.updateNeuronBias(i, -biasError);
+            layer.setLastBiasChange(i, biasError);
         }
-        for (int i = 0; i < neuralNetwork.getNumberOfOutputs(); i++) {
-            int outputNum = numOfNeuronsInPreviousLayer * i;
-            totalNeuronOutputErrorDerivativesOfOutputLayer[i] = totalErrorDerivatives[outputNum] * neuronOutputErrorDerivatives[outputNum];
+    }
+
+    private double[] calculateErrorInOutputLayer(
+            double[] outputs, double[] expectedOutputs
+    ) throws IllegalAccessException {
+        totalNeuronOutputErrorDerivativesOfOutputLayer = new double[numOfOutputs];
+        //edit output layer weights
+        int numOfNeuronsInPreviousLayer = neuralNetwork.getLayersResult()[numOfHiddenLayers].length;
+        double[] weightError = new double[numOfNeuronsInPreviousLayer * numOfOutputs];
+        for (int i = 0; i < numOfOutputs; i++) {
+            double totalErrorDerivatives = -(expectedOutputs[i] - outputs[i]);
+            double neuronOutputErrorDerivatives = outputs[i] * (1 - outputs[i]);
+            for (int j = 0; j < numOfNeuronsInPreviousLayer; j++) {
+                double neuronErrorDerivative = neuralNetwork.getLayersResult()[numOfHiddenLayers][j];
+                weightError[i * numOfNeuronsInPreviousLayer + j] =
+                        totalErrorDerivatives * neuronOutputErrorDerivatives * neuronErrorDerivative;
+            }
+            totalNeuronOutputErrorDerivativesOfOutputLayer[i] = totalErrorDerivatives * neuronOutputErrorDerivatives;
         }
         return weightError;
     }
 
-    private double[][] calculateErrorInHiddenLayers(double[] finalOutputs) throws IllegalAccessException {
-        double[][] weightErrorHidden = new double[neuralNetwork.getNumberOfHiddenLayers()][64];
-        for (int hLayer = 0; hLayer < neuralNetwork.getNumberOfHiddenLayers(); hLayer++) {
-            int hiddenLayerNum = neuralNetwork.getNumberOfHiddenLayers() - hLayer;
+    private double[][] calculateErrorInHiddenLayers() throws IllegalAccessException {
+        int maxConnections = 0;
+        for (int i = 0; i < neuralNetwork.getLayersResult().length; i++) {
+            int layerNeurons = neuralNetwork.getLayersResult()[i].length;
+            if (maxConnections < layerNeurons) {
+                maxConnections = layerNeurons;
+            }
+        }
+        maxConnections *= maxConnections;
+        double[][] weightErrorHidden = new double[numOfHiddenLayers][maxConnections];
+        if (neuralNetwork.isWithBias()) {
+            biasErrorHidden = new double[numOfHiddenLayers][maxConnections];
+        }
+        for (int hLayer = 0; hLayer < numOfHiddenLayers; hLayer++) {
+            int hiddenLayerNum = numOfHiddenLayers - hLayer;
             double[] outputs = neuralNetwork.getLayersResult()[hiddenLayerNum];
             int numOfNeuronsInPreviousLayer = neuralNetwork.getLayersResult()[hiddenLayerNum - 1].length;
-            int numOfConnectionsInLayer = numOfNeuronsInPreviousLayer * outputs.length;
-            for (int i = 0; i < numOfConnectionsInLayer; i++) {
+            for (int i = 0; i < outputs.length; i++) {
                 double totalErrorDerivative = 0;
-                int outputNum = i / numOfNeuronsInPreviousLayer;
                 if (hLayer == 0) {
-                    for (int j = 0; j < neuralNetwork.getNumberOfOutputs(); j++) {
-                        double weight = neuralNetwork.getOutputLayer().getNeuron(j).getWeights()[outputNum];
+                    for (int j = 0; j < numOfOutputs; j++) {
+                        double weight = neuralNetwork.getOutputLayer().getNeuronWeight(j, i);
                         totalErrorDerivative += totalNeuronOutputErrorDerivativesOfOutputLayer[j] * weight;
                     }
                 } else {
                     int numOfNeurons = neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeurons().length;
                     for (int j = 0; j < numOfNeurons; j++) {
-                        totalErrorDerivative += totalNeuronOutputErrorDerivativesOfOutputLayer[j] *
-                                neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeuron(j).getWeights()[i / neuralNetwork.getOutputLayer().getNeurons().length];
+                        double weight = neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeuronWeight(
+                                j, (i * numOfNeuronsInPreviousLayer) / numOfOutputs
+                        );
+                        totalErrorDerivative += totalNeuronOutputErrorDerivativesOfOutputLayer[j] * weight;
                     }
                 }
-                double neuronOutputErrorDerivative = outputs[outputNum] *
-                        (1 - outputs[outputNum]);
-                double neuronErrorDerivative = neuralNetwork.getLayersResult()[hiddenLayerNum - 1][i % numOfNeuronsInPreviousLayer];
-                weightErrorHidden[hLayer][i] = totalErrorDerivative * neuronOutputErrorDerivative * neuronErrorDerivative;
+                double neuronOutputErrorDerivative = outputs[i] * (1 - outputs[i]);
+                for (int j = 0; j < numOfNeuronsInPreviousLayer; j++) {
+                    double neuronErrorDerivative = neuralNetwork.getLayersResult()[hiddenLayerNum - 1][j];
+                    weightErrorHidden[hLayer][i * numOfNeuronsInPreviousLayer + j] =
+                            totalErrorDerivative * neuronOutputErrorDerivative * neuronErrorDerivative;
+                }
+                if (neuralNetwork.isWithBias()) {
+                    biasErrorHidden[hLayer][i] = totalErrorDerivative * neuronOutputErrorDerivative;
+                }
             }
         }
         return weightErrorHidden;
@@ -119,13 +154,14 @@ public class Teacher {
 
     public double calculateError(double[][] inputs, double[][] expectedOutputs) {
         double totalError = 0;
-        double[][] outputs = new double[expectedOutputs.length][expectedOutputs[0].length];
-        for (int i = 0; i < expectedOutputs.length; i++) {
+        int expectedOutputsLength = expectedOutputs.length;
+        double[][] outputs = new double[expectedOutputsLength][expectedOutputs[0].length];
+        for (int i = 0; i < expectedOutputsLength; i++) {
             outputs[i] = neuralNetwork.calculateOutput(inputs[i]);
             for (int j = 0; j < outputs[i].length; j++) {
-                totalError += ((expectedOutputs[i][j] - outputs[i][j]) * (expectedOutputs[i][j] - outputs[i][j])) / 2;
+                totalError += ((expectedOutputs[i][j] - outputs[i][j]) * (expectedOutputs[i][j] - outputs[i][j]));
             }
         }
-        return totalError / expectedOutputs.length;
+        return totalError / expectedOutputsLength;
     }
 }

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -126,7 +127,7 @@
                 <Font name="System Bold" size="12.0"/>
             </font>
         </Label>
-        <RadioButton fx:id="learnRadioButton" layoutX="694.0" layoutY="26.0" mnemonicParsing="false"
+        <RadioButton fx:id="learnRadioButton" layoutX="280.0" layoutY="26.0" mnemonicParsing="false"
                      onAction="#changeMode" selected="true" text="Learning mode" textFill="WHITE">
             <font>
                 <Font name="System Bold Italic" size="28.0"/>
@@ -159,5 +160,10 @@
                 <Font name="System Bold" size="16.0"/>
             </font>
         </Button>
+        <ImageView fx:id="chart" fitHeight="220.0" fitWidth="400.0" layoutX="541.0" layoutY="14.0" pickOnBounds="true"
+                   preserveRatio="true"/>
+        <CheckBox fx:id="generateStats" disable="true" layoutX="24.0" layoutY="594.0" mnemonicParsing="false"
+                  onAction="#changeStats" prefHeight="17.0" prefWidth="228.0"
+                  text="Generate stats (outputs file required)" textFill="WHITE"/>
     </children>
 </Pane>

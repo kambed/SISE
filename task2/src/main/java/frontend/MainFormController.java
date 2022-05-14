@@ -1,13 +1,20 @@
 package frontend;
 
 import backend.NeuralNetwork;
+import backend.StatsGenerator;
 import backend.Teacher;
 import backend.dao.FileNeuralNetworkDao;
 import backend.dao.FileOperator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.jfree.chart.ChartUtilities;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -66,14 +73,44 @@ public class MainFormController {
     Button saveButton;
     @FXML
     Button loadButton;
+    @FXML
+    ImageView chart;
+    @FXML
+    CheckBox generateStats;
 
     public void startCalculating(ActionEvent actionEvent) {
-        for (int i = 1; i <= testInputs.length; i++) {
-            consoleArea.appendText("Data " + i + Arrays.toString(nn.calculateOutput(testInputs[i - 1])) + "\n");
+        if (generateStats.isSelected()) {
+            double[][] outputs = new double[learnOutputs.length][learnOutputs[0].length];
+            for (int i = 0; i < testInputs.length; i++) {
+                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(testInputs[i])) + "\n");
+                outputs[i] = nn.calculateOutput(testInputs[i]);
+            }
+            StatsGenerator.validateResults(outputs, learnOutputs);
+            consoleArea.appendText("Correct global: [" + StatsGenerator.getNumOfCorrect() + "]\n");
+            consoleArea.appendText("Incorrect global: [" + StatsGenerator.getNumOfIncorrect() + "]\n");
+            for (int i = 0; i < learnOutputs[0].length; i++) {
+                consoleArea.appendText("===== CLASS " + (i + 1) + "===== \n");
+                consoleArea.appendText("Correct: [" +
+                        StatsGenerator.getNumOfCorrectPerClass()[i] + "]\n");
+                consoleArea.appendText("Incorrect: [" +
+                        StatsGenerator.getNumOfIncorrectPerClass()[i] + "]\n");
+                consoleArea.appendText(StatsGenerator.getConfusionMatrix(i));
+                consoleArea.appendText("Precision: [" + StatsGenerator.getPrecision(i) + "]\n");
+                consoleArea.appendText("Recall: [" + StatsGenerator.getRecall(i) + "]\n");
+                consoleArea.appendText("F-Measure: [" + StatsGenerator.getfMeasure(i) + "]\n");
+            }
+        } else {
+            for (int i = 0; i < testInputs.length; i++) {
+                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(testInputs[i])) + "\n");
+            }
         }
     }
 
-    public void startLearning(ActionEvent actionEvent) {
+    public void changeStats(ActionEvent actionEvent) {
+        loadLearningOutputDataButton.setDisable(!generateStats.isSelected());
+    }
+
+    public void startLearning(ActionEvent actionEvent) throws FileNotFoundException {
         nn = new NeuralNetwork(Integer.parseInt(numOfInputs.getText()),
                 Integer.parseInt(numOfOutputs.getText()),
                 Integer.parseInt(numOfHiddenLayers.getText()),
@@ -89,16 +126,37 @@ public class MainFormController {
         consoleArea.appendText("[TEACHER INITIALIZED]: " +
                 Double.parseDouble(learningRate.getText()) + " learning rate, " +
                 Double.parseDouble(momentumRate.getText()) + " momentum rate \n");
-        for (int i = 0; i < Integer.parseInt(numOfEras.getText()) - 1; i += 10) {
-            consoleArea.appendText("Error after " + i + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
-            t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
+
+        int numOfErasInt = Integer.parseInt(numOfEras.getText());
+        double[] eras = new double[numOfErasInt + 1];
+        double[] errors = new double[numOfErasInt + 1];
+        for (int i = 0; i < numOfErasInt; i++) {
+            eras[i] = i;
+            errors[i] = t.calculateError(learnInputs, learnOutputs);
+            t.changeWeightWithBackpropagation(1, learnInputs, learnOutputs);
         }
+        eras[numOfErasInt] = Integer.parseInt(numOfEras.getText());
+        errors[numOfErasInt] = t.calculateError(learnInputs, learnOutputs);
+
+        try {
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart.png"),
+                    ChartGenerator.generatePlot(eras, errors),
+                    400, 220
+            );
+        } catch (IOException e) {
+            consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
+        }
+
         if (Integer.parseInt(numOfEras.getText()) % 10 == 0) {
             t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
         } else {
             t.changeWeightWithBackpropagation(Integer.parseInt(numOfEras.getText()) % 10, learnInputs, learnOutputs);
         }
         consoleArea.appendText("Error after " + numOfEras.getText() + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
+
+        FileInputStream input = new FileInputStream("chart.png");
+        chart.setImage(new Image(input));
     }
 
     public void loadLearningData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
@@ -173,6 +231,7 @@ public class MainFormController {
         calculateButton.setDisable(learningMode);
         loadTestDataButton.setDisable(learningMode);
         loadButton.setDisable(learningMode);
+        generateStats.setDisable(learningMode);
 
         learnButton.setDisable(!learningMode);
         numOfOutputs.setDisable(!learningMode);
