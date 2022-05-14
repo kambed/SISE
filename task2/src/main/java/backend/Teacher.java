@@ -13,6 +13,7 @@ public class Teacher {
     private final double learningRate;
     private final double momentumRate;
     private double[] totalNeuronOutputErrorDerivativesOfOutputLayer;
+    private double[][] biasErrorHidden;
     private final int numOfHiddenLayers;
     private final int numOfOutputs;
 
@@ -55,6 +56,12 @@ public class Teacher {
         for (int i = 0; i < numOfHiddenLayers; i++) {
             editWeights(weightErrorHidden[i], neuralNetwork.getHiddenLayers()[numOfHiddenLayers - 1 - i]);
         }
+        if (neuralNetwork.isWithBias()) {
+            editBiases(totalNeuronOutputErrorDerivativesOfOutputLayer, neuralNetwork.getOutputLayer());
+            for (int i = 0; i < numOfHiddenLayers; i++) {
+                editBiases(biasErrorHidden[i], neuralNetwork.getHiddenLayers()[numOfHiddenLayers - 1 - i]);
+            }
+        }
     }
 
     private void editWeights(double[] weightsError, Layer layer) throws IllegalAccessException {
@@ -66,6 +73,15 @@ public class Teacher {
                 layer.updateNeuronWeight(i, j, -weightError);
                 layer.setLastWeightChange(j, weightError);
             }
+        }
+    }
+
+    private void editBiases(double[] biasErrors, Layer layer) throws IllegalAccessException {
+        for (int i = 0; i < layer.getNeurons().length; i++) {
+            double biasError = (biasErrors[i] * learningRate)
+                    + (momentumRate * layer.getLastWeightChange()[i]);
+            layer.updateNeuronBias(i, -biasError);
+            layer.setLastBiasChange(i, biasError);
         }
     }
 
@@ -91,6 +107,9 @@ public class Teacher {
 
     private double[][] calculateErrorInHiddenLayers() throws IllegalAccessException {
         double[][] weightErrorHidden = new double[numOfHiddenLayers][64];
+        if (neuralNetwork.isWithBias()) {
+            biasErrorHidden = new double[numOfHiddenLayers][64];
+        }
         for (int hLayer = 0; hLayer < numOfHiddenLayers; hLayer++) {
             int hiddenLayerNum = numOfHiddenLayers - hLayer;
             double[] outputs = neuralNetwork.getLayersResult()[hiddenLayerNum];
@@ -116,6 +135,9 @@ public class Teacher {
                     double neuronErrorDerivative = neuralNetwork.getLayersResult()[hiddenLayerNum - 1][j];
                     weightErrorHidden[hLayer][i * numOfNeuronsInPreviousLayer + j] =
                             totalErrorDerivative * neuronOutputErrorDerivative * neuronErrorDerivative;
+                }
+                if (neuralNetwork.isWithBias()) {
+                    biasErrorHidden[hLayer][i] = totalErrorDerivative * neuronOutputErrorDerivative;
                 }
             }
         }
