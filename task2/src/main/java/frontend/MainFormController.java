@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.NeuralNetwork;
+import backend.StatsGenerator;
 import backend.Teacher;
 import backend.dao.FileNeuralNetworkDao;
 import backend.dao.FileOperator;
@@ -74,11 +75,39 @@ public class MainFormController {
     Button loadButton;
     @FXML
     ImageView chart;
+    @FXML
+    CheckBox generateStats;
 
     public void startCalculating(ActionEvent actionEvent) {
-        for (int i = 1; i <= testInputs.length; i++) {
-            consoleArea.appendText("Data " + i + Arrays.toString(nn.calculateOutput(testInputs[i - 1])) + "\n");
+        if (generateStats.isSelected()) {
+            double[][] outputs = new double[learnOutputs.length][learnOutputs[0].length];
+            for (int i = 0; i < testInputs.length; i++) {
+                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(testInputs[i])) + "\n");
+                outputs[i] = nn.calculateOutput(testInputs[i]);
+            }
+            StatsGenerator.validateResults(outputs, learnOutputs);
+            consoleArea.appendText("Correct global: [" + StatsGenerator.getNumOfCorrect() + "]\n");
+            consoleArea.appendText("Incorrect global: [" + StatsGenerator.getNumOfIncorrect() + "]\n");
+            for (int i = 0; i < learnOutputs[0].length; i++) {
+                consoleArea.appendText("===== CLASS " + (i + 1) + "===== \n");
+                consoleArea.appendText("Correct: [" +
+                        StatsGenerator.getNumOfCorrectPerClass()[i] + "]\n");
+                consoleArea.appendText("Incorrect: [" +
+                        StatsGenerator.getNumOfIncorrectPerClass()[i] + "]\n");
+                consoleArea.appendText(StatsGenerator.getConfusionMatrix(i));
+                consoleArea.appendText("Precision: [" + StatsGenerator.getPrecision(i) + "]\n");
+                consoleArea.appendText("Recall: [" + StatsGenerator.getRecall(i) + "]\n");
+                consoleArea.appendText("F-Measure: [" + StatsGenerator.getfMeasure(i) + "]\n");
+            }
+        } else {
+            for (int i = 0; i < testInputs.length; i++) {
+                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(testInputs[i])) + "\n");
+            }
         }
+    }
+
+    public void changeStats(ActionEvent actionEvent) {
+        loadLearningOutputDataButton.setDisable(!generateStats.isSelected());
     }
 
     public void startLearning(ActionEvent actionEvent) throws FileNotFoundException {
@@ -116,7 +145,7 @@ public class MainFormController {
                     400, 220
             );
         } catch (IOException e) {
-            System.out.println("Wystapił problem przy generowaniu wykresu.");
+            consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
         }
 
         if (Integer.parseInt(numOfEras.getText()) % 10 == 0) {
@@ -202,6 +231,7 @@ public class MainFormController {
         calculateButton.setDisable(learningMode);
         loadTestDataButton.setDisable(learningMode);
         loadButton.setDisable(learningMode);
+        generateStats.setDisable(learningMode);
 
         learnButton.setDisable(!learningMode);
         numOfOutputs.setDisable(!learningMode);

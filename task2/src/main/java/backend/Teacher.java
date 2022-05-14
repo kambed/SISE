@@ -17,6 +17,8 @@ public class Teacher {
     private final int numOfHiddenLayers;
     private final int numOfOutputs;
 
+    private int MAX_CONNECTIONS = 64;
+
     public Teacher(NeuralNetwork neuralNetwork, double learningRate, double momentumRate) {
         this.neuralNetwork = neuralNetwork;
         this.numOfHiddenLayers = neuralNetwork.getNumberOfHiddenLayers();
@@ -106,9 +108,9 @@ public class Teacher {
     }
 
     private double[][] calculateErrorInHiddenLayers() throws IllegalAccessException {
-        double[][] weightErrorHidden = new double[numOfHiddenLayers][64];
+        double[][] weightErrorHidden = new double[numOfHiddenLayers][MAX_CONNECTIONS];
         if (neuralNetwork.isWithBias()) {
-            biasErrorHidden = new double[numOfHiddenLayers][64];
+            biasErrorHidden = new double[numOfHiddenLayers][MAX_CONNECTIONS];
         }
         for (int hLayer = 0; hLayer < numOfHiddenLayers; hLayer++) {
             int hiddenLayerNum = numOfHiddenLayers - hLayer;
