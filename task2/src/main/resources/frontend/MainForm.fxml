@@ -138,5 +138,6 @@
             </font>
         </Button>
       <ImageView fx:id="chart" fitHeight="220.0" fitWidth="400.0" layoutX="541.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <CheckBox fx:id="generateStats" disable="true" layoutX="24.0" layoutY="594.0" mnemonicParsing="false" onAction="#changeStats" prefHeight="17.0" prefWidth="228.0" text="Generate stats (outputs file required)" textFill="WHITE" />
     </children>
 </Pane>
