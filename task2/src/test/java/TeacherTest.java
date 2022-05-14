@@ -10,8 +10,8 @@ public class TeacherTest {
     @DisplayName("Teacher test")
     void teacherTest() throws IllegalAccessException {
         NeuralNetwork nn = new NeuralNetwork(2, 2, 2, false);
-        nn.getOutputLayer().getNeurons()[0].setWeights(new Double[]{0.40,0.45});
-        nn.getOutputLayer().getNeurons()[1].setWeights(new Double[]{0.50,0.55});
+        nn.getOutputLayer().getNeurons()[0].setWeights(new Double[]{0.40, 0.45});
+        nn.getOutputLayer().getNeurons()[1].setWeights(new Double[]{0.50, 0.55});
 
         nn.getOutputLayer().getNeurons()[0].setFreeExpression(0.6);
         nn.getOutputLayer().getNeurons()[1].setFreeExpression(0.6);
