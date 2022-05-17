@@ -171,8 +171,8 @@ public class Teacher {
                         }
                     }
                     double neuronOutputErrorDerivative = outputs[i] * (1 - outputs[i]);
-                    for (int j = 0; j < numOfNeuronsInNextLayer; j++) {
-                        errorDerivative[hLayer + 1][j + i * numOfNeuronsInNextLayer] *= neuronOutputErrorDerivative;
+                    for (int j = 0; j < numOfConnectionsInAllPreviousLayers; j++) {
+                        errorDerivative[hLayer + 1][j + i * numOfConnectionsInAllPreviousLayers] *= neuronOutputErrorDerivative;
                     }
                     for (int j = 0; j < numOfNeuronsInPreviousLayer; j++) {
                         double neuronErrorDerivative = neuralNetwork.getLayersResult()[hiddenLayerNum - 1][j];
@@ -185,16 +185,6 @@ public class Teacher {
                 }
                 numOfConnectionsInAllPreviousLayers *= outputs.length;
             }
-
-            //                else {
-//                    int numOfNeurons = neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeurons().length;
-//                    for (int j = 0; j < numOfNeurons; j++) {
-//                        double weight = neuralNetwork.getHiddenLayers()[hiddenLayerNum].getNeuronWeight(
-//                                j, (i * numOfNeuronsInPreviousLayer) / numOfOutputs
-//                        );
-//                        totalErrorDerivative += errorDerivative[hLayer + 1][j] * weight;
-//                    }
-//                }
         }
         return weightErrorHidden;
     }
