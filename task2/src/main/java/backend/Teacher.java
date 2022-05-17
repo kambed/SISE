@@ -5,6 +5,7 @@ import backend.layer.Layer;
 
 import java.lang.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -106,14 +107,14 @@ public class Teacher {
     }
 
     private double[][] calculateErrorInHiddenLayers() throws IllegalAccessException {
-        int maxConnections = 0;
-        for (int i = 0; i < neuralNetwork.getLayersResult().length; i++) {
-            int layerNeurons = neuralNetwork.getLayersResult()[i].length;
-            if (maxConnections < layerNeurons) {
-                maxConnections = layerNeurons;
-            }
+
+        int numOfLayers = neuralNetwork.getLayersResult().length;
+        int[] numsOfNeurons = new int[numOfLayers];
+        for (int i = 0; i < numOfLayers; i++) {
+            numsOfNeurons[i] = neuralNetwork.getLayersResult()[i].length;
         }
-        maxConnections *= maxConnections;
+        Arrays.sort(numsOfNeurons);
+        int maxConnections = numsOfNeurons[numOfLayers - 1] * numsOfNeurons[numOfLayers - 2];
         double[][] weightErrorHidden = new double[numOfHiddenLayers][maxConnections];
         if (neuralNetwork.isWithBias()) {
             biasErrorHidden = new double[numOfHiddenLayers][maxConnections];

@@ -21,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static backend.MnistCalculator.calculateNumber;
+
 public class MainFormController {
     public static final String MAIN_FORM_RESOURCE = "MainForm.fxml";
     public static final String MAIN_FORM_TITLE = "Neural Network";
@@ -82,8 +84,12 @@ public class MainFormController {
         if (generateStats.isSelected()) {
             double[][] outputs = new double[learnOutputs.length][learnOutputs[0].length];
             for (int i = 0; i < testInputs.length; i++) {
-                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(testInputs[i])) + "\n");
-                outputs[i] = nn.calculateOutput(testInputs[i]);
+                double[] inputsDouble = new double[testInputs[i].length];
+                for (int j = 0; j < testInputs[i].length; j++) {
+                    inputsDouble[j] = testInputs[i][j];
+                }
+                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(inputsDouble)) + "\n");
+                outputs[i] = nn.calculateOutput(inputsDouble);
             }
             StatsGenerator.validateResults(outputs, learnOutputs);
             consoleArea.appendText("Correct global: [" + StatsGenerator.getNumOfCorrect() + "]\n");
@@ -101,7 +107,11 @@ public class MainFormController {
             }
         } else {
             for (int i = 0; i < testInputs.length; i++) {
-                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(testInputs[i])) + "\n");
+                double[] inputsDouble = new double[testInputs[i].length];
+                for (int j = 0; j < testInputs[i].length; j++) {
+                    inputsDouble[j] = testInputs[i][j];
+                }
+                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(inputsDouble)) + "\n");
             }
         }
     }
@@ -148,12 +158,12 @@ public class MainFormController {
             consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
         }
 
-        if (Integer.parseInt(numOfEras.getText()) % 10 == 0) {
-            t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
-        } else {
-            t.changeWeightWithBackpropagation(Integer.parseInt(numOfEras.getText()) % 10, learnInputs, learnOutputs);
-        }
-        consoleArea.appendText("Error after " + numOfEras.getText() + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
+//        if (Integer.parseInt(numOfEras.getText()) % 10 == 0) {
+//            t.changeWeightWithBackpropagation(10, learnInputs, learnOutputs);
+//        } else {
+//            t.changeWeightWithBackpropagation(Integer.parseInt(numOfEras.getText()) % 10, learnInputs, learnOutputs);
+//        }
+        //consoleArea.appendText("Error after " + numOfEras.getText() + "eras: " + t.calculateError(learnInputs, learnOutputs) + "\n");
 
         FileInputStream input = new FileInputStream("chart.png");
         chart.setImage(new Image(input));
@@ -163,7 +173,17 @@ public class MainFormController {
         String stringPath = FileChoose.openChooser("Open learning data file ", actionEvent);
         if (!stringPath.isBlank()) {
             learningDataFilePath.setText(stringPath);
-            learnInputs = FileOperator.readData(Paths.get(stringPath));
+            byte[] bytes = FileOperator.readData(Paths.get(stringPath));
+            int numOfObjects = calculateNumber(bytes,4);
+            int rows = calculateNumber(bytes,8);
+            int columns = calculateNumber(bytes,12);
+            int inputs = rows * columns;
+            learnInputs = new double[numOfObjects][inputs];
+            for (int i = 0; i < numOfObjects; i++) {
+                for (int j = 0; j < inputs; j++) {
+                    learnInputs[i][j] = bytes[16 + j + i * inputs];
+                }
+            }
             consoleArea.appendText("Learning data opened from: " + stringPath + "\n");
         }
     }
@@ -172,7 +192,23 @@ public class MainFormController {
         String stringPath = FileChoose.openChooser("Open learning output data file ", actionEvent);
         if (!stringPath.isBlank()) {
             learningOutputFilePath.setText(stringPath);
-            learnOutputs = FileOperator.readData(Paths.get(stringPath));
+            byte[] bytes = FileOperator.readData(Paths.get(stringPath));
+            int numOfObjects = calculateNumber(bytes,4);
+            learnOutputs = new double[numOfObjects][10];
+            for (int i = 0; i < numOfObjects; i++) {
+                switch (bytes[i + 8]) {
+                    case 0 -> learnOutputs[i] = new double[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                    case 1 -> learnOutputs[i] = new double[]{0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+                    case 2 -> learnOutputs[i] = new double[]{0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+                    case 3 -> learnOutputs[i] = new double[]{0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
+                    case 4 -> learnOutputs[i] = new double[]{0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
+                    case 5 -> learnOutputs[i] = new double[]{0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
+                    case 6 -> learnOutputs[i] = new double[]{0, 0, 0, 0, 0, 0, 1, 0, 0, 0};
+                    case 7 -> learnOutputs[i] = new double[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0};
+                    case 8 -> learnOutputs[i] = new double[]{0, 0, 0, 0, 0, 0, 0, 0, 1, 0};
+                    case 9 -> learnOutputs[i] = new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+                }
+            }
             consoleArea.appendText("Learning output data opened from: " + stringPath + "\n");
         }
     }
@@ -181,7 +217,17 @@ public class MainFormController {
         String stringPath = FileChoose.openChooser("Open test data file ", actionEvent);
         if (!stringPath.isBlank()) {
             dataFilePath.setText(stringPath);
-            testInputs = FileOperator.readData(Paths.get(stringPath));
+            byte[] bytes = FileOperator.readData(Paths.get(stringPath));
+            int numOfObjects = calculateNumber(bytes,4);
+            int rows = calculateNumber(bytes,8);
+            int columns = calculateNumber(bytes,12);
+            int inputs = rows * columns;
+            testInputs = new double[numOfObjects][inputs];
+            for (int i = 0; i < numOfObjects; i++) {
+                for (int j = 0; j < inputs; j++) {
+                    testInputs[i][j] = bytes[16 + j + i * inputs];
+                }
+            }
             consoleArea.appendText("Test data opened from: " + stringPath + "\n");
         }
     }
