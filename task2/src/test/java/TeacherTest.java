@@ -33,4 +33,38 @@ public class TeacherTest {
         assertEquals(0.73, results[0], 0.01);
         assertEquals(0.76, results[1], 0.01);
     }
+
+    @Test
+    @DisplayName("Teacher test multilayer")
+    void teacherTestMultilayer() throws IllegalAccessException {
+        NeuralNetwork nn = new NeuralNetwork(2, 2, 2, 2, false);
+        nn.getOutputLayer().getNeurons()[0].setWeights(new Double[]{0.40, 0.45});
+        nn.getOutputLayer().getNeurons()[1].setWeights(new Double[]{0.50, 0.55});
+
+        nn.getOutputLayer().getNeurons()[0].setFreeExpression(0.6);
+        nn.getOutputLayer().getNeurons()[1].setFreeExpression(0.6);
+
+        nn.getHiddenLayers()[1].getNeurons()[0].setWeights(new Double[]{0.15, 0.20});
+        nn.getHiddenLayers()[1].getNeurons()[1].setWeights(new Double[]{0.25, 0.30});
+
+        nn.getHiddenLayers()[1].getNeurons()[0].setFreeExpression(0.35);
+        nn.getHiddenLayers()[1].getNeurons()[1].setFreeExpression(0.35);
+
+        nn.getHiddenLayers()[0].getNeurons()[0].setWeights(new Double[]{0.60, 0.65});
+        nn.getHiddenLayers()[0].getNeurons()[1].setWeights(new Double[]{0.70, 0.75});
+
+        nn.getHiddenLayers()[0].getNeurons()[0].setFreeExpression(0.80);
+        nn.getHiddenLayers()[0].getNeurons()[1].setFreeExpression(0.80);
+
+        double[] results = nn.calculateOutput(new double[]{0.05, 0.1});
+        assertEquals(0.76, results[0], 0.01);
+        assertEquals(0.78, results[1], 0.01);
+
+        Teacher t = new Teacher(nn, 0.9, 0.6);
+        t.changeWeightWithBackpropagation(1, new double[][]{{0.05, 0.1}}, new double[][]{{0.01, 0.99}});
+
+        results = nn.calculateOutput(new double[]{0.05, 0.1});
+        assertEquals(0.74, results[0], 0.01);
+        assertEquals(0.78, results[1], 0.01);
+    }
 }
