@@ -152,9 +152,8 @@ public class Teacher {
                                 j, i
                         );
                         for (int k = 0; k < numOfConnectionsInAllPreviousLayers / numOfNeuronsInNextLayer; k++) {
-                            int numOfDerivative = k + j * (numOfConnectionsInAllPreviousLayers / numOfNeuronsInNextLayer)
-                                    + i * numOfConnectionsInAllPreviousLayers;
                             int numOfPreviousDerivative = j * (numOfConnectionsInAllPreviousLayers / numOfNeuronsInNextLayer) + k;
+                            int numOfDerivative = numOfPreviousDerivative + i * numOfConnectionsInAllPreviousLayers;
                             errorDerivative[hLayer + 1][numOfDerivative] = weight *
                                     errorDerivative[hLayer][numOfPreviousDerivative];
                             totalErrorDerivative += errorDerivative[hLayer + 1][numOfDerivative];
