@@ -88,9 +88,13 @@ public class MainFormController {
                 for (int j = 0; j < testInputs[i].length; j++) {
                     inputsDouble[j] = testInputs[i][j];
                 }
-                consoleArea.appendText("Data " + (i + 1) + Arrays.toString(nn.calculateOutput(inputsDouble)) + "\n");
                 outputs[i] = nn.calculateOutput(inputsDouble);
             }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < testInputs.length; i++) {
+                sb.append("Data ").append(i + 1).append(Arrays.toString(outputs[i])).append("\n");
+            }
+            consoleArea.appendText(sb.toString());
             StatsGenerator.validateResults(outputs, learnOutputs);
             consoleArea.appendText("Correct global: [" + StatsGenerator.getNumOfCorrect() + "]\n");
             consoleArea.appendText("Incorrect global: [" + StatsGenerator.getNumOfIncorrect() + "]\n");
