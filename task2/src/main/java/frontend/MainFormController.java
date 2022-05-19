@@ -121,11 +121,13 @@ public class MainFormController {
     }
 
     public void startLearning(ActionEvent actionEvent) throws FileNotFoundException {
-        nn = new NeuralNetwork(Integer.parseInt(numOfInputs.getText()),
-                Integer.parseInt(numOfOutputs.getText()),
-                Integer.parseInt(numOfHiddenLayers.getText()),
-                Integer.parseInt(numOfNeuronsInHiddenLayers.getText()),
-                withBias.isSelected());
+        if (nn == null) {
+            nn = new NeuralNetwork(Integer.parseInt(numOfInputs.getText()),
+                    Integer.parseInt(numOfOutputs.getText()),
+                    Integer.parseInt(numOfHiddenLayers.getText()),
+                    Integer.parseInt(numOfNeuronsInHiddenLayers.getText()),
+                    withBias.isSelected());
+        }
         consoleArea.appendText("[NEURAL NETWORK INITIALIZED]: " +
                 Integer.parseInt(numOfInputs.getText()) + " inputs, " +
                 Integer.parseInt(numOfOutputs.getText()) + " outputs, " +
@@ -189,18 +191,8 @@ public class MainFormController {
             int numOfObjects = calculateNumber(bytes,4);
             learnOutputs = new double[numOfObjects][10];
             for (int i = 0; i < numOfObjects; i++) {
-                switch (bytes[i + 8]) {
-                    case 0 -> learnOutputs[i] = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-                    case 1 -> learnOutputs[i] = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-                    case 2 -> learnOutputs[i] = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-                    case 3 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-                    case 4 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-                    case 5 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0};
-                    case 6 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
-                    case 7 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0};
-                    case 8 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
-                    case 9 -> learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
-                }
+                learnOutputs[i] = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+                learnOutputs[i][bytes[i + 8]] = 1.0;
             }
             consoleArea.appendText("Learning output data opened from: " + stringPath + "\n");
         }
